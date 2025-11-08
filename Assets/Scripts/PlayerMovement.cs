@@ -5,18 +5,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody rb;
+    private CharacterController controller;
     private Animator animator;
 
     private float movementX;
     private float movementY;
-    
+
     public float speed = 5f;
     public float rotationSpeed = 10f;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
     }
 
@@ -29,31 +29,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Create a movement vector from input
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-
-        // Calculate the actual speed magnitude
         float currentSpeed = movement.magnitude;
 
-        // Update animation parameter (so Speed > 0.01 plays run animation)
-        GetComponent<Animator>().SetFloat("Speed", currentSpeed);
+        animator.SetFloat("Speed", currentSpeed);
 
-        // Only move if we have significant input
         if (currentSpeed > 0.01f)
         {
-            // Move player
-            transform.Translate(movement.normalized * speed * Time.fixedDeltaTime, Space.World);
+            // Move player using CharacterController
+            controller.Move(movement.normalized * speed * Time.fixedDeltaTime);
 
-            // Smoothly rotate player in the direction of movement
+            // Rotate toward direction of movement
             Quaternion targetRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
         }
+
         if (animator.GetBool("IsDancing"))
         {
-            // Keep facing the camera
             Vector3 lookDirection = Camera.main.transform.forward;
             lookDirection.y = 0;
             transform.rotation = Quaternion.LookRotation(lookDirection);
         }
+        Vector3 pos = transform.position;
+        pos.y = -0.111f;
+        transform.position = pos;
     }
 }
