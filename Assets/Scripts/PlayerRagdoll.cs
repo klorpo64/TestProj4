@@ -2,48 +2,54 @@ using UnityEngine;
 
 public class PlayerRagdoll : MonoBehaviour
 {
-    public Animator animator;
-    private Rigidbody[] ragdollBodies;
-    private bool isRagdoll = false;
+    [Header("References")]
+    public Animator animator;                     // Player animator
+    public Rigidbody[] ragdollBodies;             // All rigidbodies for ragdoll
+    public Collider[] ragdollColliders;           // All colliders for ragdoll
+    public Collider mainCollider;                 // Main character collider
+    public Rigidbody mainRigidbody;               // Main character rigidbody
+    public MonoBehaviour movementScript;          // The script that controls player movement
+    public CameraController cameraController;     // Camera script to freeze
 
-    // Reference to your player movement script
-    public MonoBehaviour playerController; // assign your movement script here
-
-    void Awake()
+    void Start()
     {
-        ragdollBodies = GetComponentsInChildren<Rigidbody>();
-
-        if (animator == null)
-            animator = GetComponent<Animator>();
-
-        foreach (Rigidbody rb in ragdollBodies)
-        {
-            if (rb != null)
-                rb.isKinematic = true;
-        }
+        SetRagdoll(false);
     }
 
     public void ActivateRagdoll(Vector3 force)
     {
-        if (isRagdoll) return;
-        isRagdoll = true;
+        // Stop animation + player control
+        if (movementScript != null) movementScript.enabled = false;
+        if (animator != null) animator.enabled = false;
 
-        if (animator != null)
-            animator.enabled = false;
+        // Freeze camera follow
+        if (cameraController != null)
+            cameraController.freezeCamera = true;
 
-        if (playerController != null)
-            playerController.enabled = false; // disables player movement
+        SetRagdoll(true);
 
-        if (ragdollBodies != null)
+        // Apply force to each ragdoll rigidbody
+        foreach (Rigidbody rb in ragdollBodies)
         {
-            foreach (Rigidbody rb in ragdollBodies)
-            {
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                    rb.AddForce(force, ForceMode.Impulse);
-                }
-            }
+            rb.AddForce(force, ForceMode.Impulse);
         }
+    }
+
+    void SetRagdoll(bool state)
+    {
+        // Enable ragdoll bodies + colliders
+        foreach (Rigidbody rb in ragdollBodies)
+        {
+            rb.isKinematic = !state;
+        }
+
+        foreach (Collider col in ragdollColliders)
+        {
+            col.enabled = state;
+        }
+
+        // Disable/Enable main control collider & rigidbody
+        mainCollider.enabled = !state;
+        mainRigidbody.isKinematic = state;
     }
 }
