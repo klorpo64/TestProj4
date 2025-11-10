@@ -1,68 +1,57 @@
 using UnityEngine;
-using DialogueEditor;
 
 public class NPCSimpleMove : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public Transform destination;
     public float moveSpeed = 3f;
     public Animator animator;
-    public float rotationSpeed = 5f; // how fast the NPC rotates toward movement
+    public float rotationSpeed = 5f;
 
-    private bool movementPending = false;
+    [Header("State")]
+    public bool hasReachedDestination = false;
+
     private bool isMoving = false;
 
-    void OnEnable()
+    private void Update()
     {
-        ConversationManager.OnConversationEnded += OnConversationEnded;
-    }
-
-    void OnDisable()
-    {
-        ConversationManager.OnConversationEnded -= OnConversationEnded;
-    }
-
-    // Called from the Event Node in the dialogue
-    public void PrepareToMove()
-    {
-        movementPending = true;
-    }
-
-    private void OnConversationEnded()
-    {
-        if (movementPending)
+        if (isMoving && !hasReachedDestination)
         {
-            isMoving = true;
-            movementPending = false;
-
-            if (animator != null)
-                animator.SetBool("isRunning", true);
+            MoveToDestination();
         }
     }
 
-    void Update()
+    // Called from Dialogue Editor at the end of dialogue
+    public void PrepareToMove()
     {
-        if (isMoving && destination != null)
+        // optional: enable player movement/unlock here
+        isMoving = true;
+
+        if (animator != null)
+            animator.SetBool("isRunning", true);
+    }
+
+
+    private void MoveToDestination()
+    {
+        Vector3 direction = (destination.position - transform.position).normalized;
+        transform.position = Vector3.MoveTowards(transform.position, destination.position, moveSpeed * Time.deltaTime);
+
+        if (direction != Vector3.zero && animator != null)
         {
-            Vector3 direction = (destination.position - transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
 
-            if (direction != Vector3.zero)
-            {
-                // Rotate smoothly toward movement direction
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
-            }
+        if (Vector3.Distance(transform.position, destination.position) < 0.1f)
+        {
+            isMoving = false;
+            hasReachedDestination = true;
 
-            // Move toward destination
-            transform.position = Vector3.MoveTowards(transform.position, destination.position, moveSpeed * Time.deltaTime);
+            if (animator != null)
+                animator.SetBool("isRunning", false);
 
-            // Check if reached destination
-            if (Vector3.Distance(transform.position, destination.position) < 0.1f)
-            {
-                isMoving = false;
-
-                if (animator != null)
-                    animator.SetBool("isRunning", false);
-            }
+            gameObject.SetActive(false);
         }
     }
 }

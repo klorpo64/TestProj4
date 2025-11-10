@@ -5290,7 +5290,7 @@ MonoBehaviour:
   npc: {fileID: 371066285}
   screenFader: {fileID: 1259997703}
   doorSound: {fileID: 514201773}
-  nextScene: Walk
+  nextScene: Walkish
   rotationDuration: 1
   fadeDuration: 1
 --- !u!4 &2062060367

@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/WorkingHouse.unity
     guid: d14887c48dcd33944aeb7c68cffa188f
   - enabled: 1
-    path: Assets/Scenes/Walk.unity
-    guid: c4b1f7541b499004ea9387a7134d92c0
+    path: Assets/Scenes/Walkish.unity
+    guid: 9c37f580837ec8941a539b1c0cb4b76d
+  - enabled: 1
+    path: Assets/Scenes/Beach.unity
+    guid: 2f33cb20d2fc753488c336fa28e39b63
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
