@@ -13,6 +13,15 @@ public class NPCSimpleMove : MonoBehaviour
 
     private bool isMoving = false;
 
+    // Reference to dialogue handler
+    private NPCDialogueHandler dialogueHandler;
+
+    private void Awake()
+    {
+        // Try to find the dialogue handler on the same GameObject
+        dialogueHandler = GetComponent<NPCDialogueHandler>();
+    }
+
     private void Update()
     {
         if (isMoving && !hasReachedDestination)
@@ -24,13 +33,15 @@ public class NPCSimpleMove : MonoBehaviour
     // Called from Dialogue Editor at the end of dialogue
     public void PrepareToMove()
     {
-        // optional: enable player movement/unlock here
         isMoving = true;
+
+        // Tell dialogue handler NPC is running
+        if (dialogueHandler != null)
+            dialogueHandler.isRunning = true;
 
         if (animator != null)
             animator.SetBool("isRunning", true);
     }
-
 
     private void MoveToDestination()
     {
@@ -50,6 +61,10 @@ public class NPCSimpleMove : MonoBehaviour
 
             if (animator != null)
                 animator.SetBool("isRunning", false);
+
+            // Tell dialogue handler NPC stopped running
+            if (dialogueHandler != null)
+                dialogueHandler.isRunning = false;
 
             gameObject.SetActive(false);
         }
