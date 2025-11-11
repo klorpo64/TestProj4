@@ -765,6 +765,7 @@ MonoBehaviour:
   conversation: {fileID: 371066293}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!65 &371066292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1266,6 +1267,7 @@ MonoBehaviour:
   conversation: {fileID: 502976057}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!114 &502976060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2914,7 +2916,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!143 &1229717595
@@ -3543,6 +3545,7 @@ MonoBehaviour:
   conversation: {fileID: 1401495106}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!114 &1401495106
 MonoBehaviour:
   m_ObjectHideFlags: 0
