@@ -18,7 +18,11 @@ RenderSettings:
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   m_FogDensity: 0.01
+=======
+  m_FogDensity: 0.002
+>>>>>>> Stashed changes
 =======
   m_FogDensity: 0.002
 >>>>>>> Stashed changes
@@ -2269,7 +2273,10 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1 &230066375
 GameObject:
   m_ObjectHideFlags: 1
@@ -2792,6 +2799,7 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1001 &296242367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2871,6 +2879,8 @@ Transform:
   m_PrefabInstance: {fileID: 296242367}
   m_PrefabAsset: {fileID: 0}
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1 &296516086
 GameObject:
   m_ObjectHideFlags: 0
@@ -3296,12 +3306,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   m_SourcePrefab: {fileID: 100100000, guid: a0c53a09e4a37b5409b1248ebce2c376, type: 3}
 --- !u!4 &327011157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 445370, guid: a0c53a09e4a37b5409b1248ebce2c376, type: 3}
   m_PrefabInstance: {fileID: 327011156}
 =======
+=======
+>>>>>>> Stashed changes
   m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
 --- !u!1001 &331967174
 PrefabInstance:
@@ -4272,6 +4285,7 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &428227012
 GameObject:
   m_ObjectHideFlags: 0
@@ -4497,6 +4511,8 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &413050014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4655,6 +4671,7 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98653de49a7044442972e6997c40db16, type: 3}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &441678849
 GameObject:
   m_ObjectHideFlags: 0
@@ -4768,6 +4785,8 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &434656175
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6665,7 +6684,11 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1001 &682987492
+=======
+--- !u!1001 &679536132
+>>>>>>> Stashed changes
 =======
 --- !u!1001 &679536132
 >>>>>>> Stashed changes
@@ -6674,6 +6697,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     m_TransformParent: {fileID: 2079439858}
     m_Modifications:
@@ -6741,6 +6765,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
 =======
+=======
+>>>>>>> Stashed changes
     m_TransformParent: {fileID: 786031148}
     m_Modifications:
     - target: {fileID: 7303116509305054165, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
@@ -6798,6 +6824,9 @@ PrefabInstance:
     - target: {fileID: 8499614720051398551, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
       propertyPath: m_Name
       value: Road_1_line (2)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6805,12 +6834,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   m_SourcePrefab: {fileID: 100100000, guid: 98653de49a7044442972e6997c40db16, type: 3}
 --- !u!4 &682987493 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 492160, guid: 98653de49a7044442972e6997c40db16, type: 3}
   m_PrefabInstance: {fileID: 682987492}
   m_PrefabAsset: {fileID: 0}
+=======
+  m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
+>>>>>>> Stashed changes
 =======
   m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
 >>>>>>> Stashed changes
@@ -9368,6 +9401,7 @@ Transform:
   m_PrefabInstance: {fileID: 860389953}
   m_PrefabAsset: {fileID: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1001 &863494712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9449,6 +9483,8 @@ Transform:
 --- !u!1 &869243052
 GameObject:
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!4 &861394433 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7303116509305054165, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
@@ -10177,6 +10213,7 @@ Transform:
   m_PrefabInstance: {fileID: 1003975307}
   m_PrefabAsset: {fileID: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!4 &1006047740 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7303116509305054165, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
@@ -10184,6 +10221,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1019460878
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1 &1007538270
 >>>>>>> Stashed changes
 GameObject:
@@ -17282,6 +17321,7 @@ Transform:
   m_Father: {fileID: 1367112986}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &1836726840
 GameObject:
   m_ObjectHideFlags: 0
@@ -17394,6 +17434,8 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!4 &1792355411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7303116509305054165, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
@@ -17483,6 +17525,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 --- !u!1 &1843259696
 GameObject:
@@ -17914,12 +17959,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   m_SourcePrefab: {fileID: 100100000, guid: 98653de49a7044442972e6997c40db16, type: 3}
 --- !u!4 &1865905952 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 492160, guid: 98653de49a7044442972e6997c40db16, type: 3}
   m_PrefabInstance: {fileID: 1865905951}
   m_PrefabAsset: {fileID: 0}
+=======
+  m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
+>>>>>>> Stashed changes
 =======
   m_SourcePrefab: {fileID: 100100000, guid: dfec8d9b723b08e4ab4463a1b8f9cd7d, type: 3}
 >>>>>>> Stashed changes
@@ -20422,6 +20471,9 @@ SceneRoots:
   - {fileID: 715797955}
   - {fileID: 189370283}
   - {fileID: 1063348949}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   - {fileID: 2079439858}
   - {fileID: 401142121}
@@ -20485,4 +20537,7 @@ SceneRoots:
   - {fileID: 1524268218}
   - {fileID: 1098809123}
   - {fileID: 230066377}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

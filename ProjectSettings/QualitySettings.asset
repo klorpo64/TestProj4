@@ -103,7 +103,11 @@ QualitySettings:
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     customRenderPipeline: {fileID: 11400000, guid: 473c1389641046b46964edb33e5e481f, type: 2}
+=======
+    customRenderPipeline: {fileID: 11400000, guid: acd05b78e0cd47e4fa0b5110322d618a, type: 2}
+>>>>>>> Stashed changes
 =======
     customRenderPipeline: {fileID: 11400000, guid: acd05b78e0cd47e4fa0b5110322d618a, type: 2}
 >>>>>>> Stashed changes
