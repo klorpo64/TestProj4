@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using DialogueEditor; // Needed to access ConversationManager
 
 public class PlayerDance : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class PlayerDance : MonoBehaviour
     private InputAction danceAction;
     private PlayerMovement movement;
     private Coroutine faceCameraRoutine;
-
 
     private IEnumerator FaceCamera()
     {
@@ -19,7 +19,6 @@ public class PlayerDance : MonoBehaviour
 
         float t = 0f;
         float duration = 0.25f; // tweak for smoothness
-
         Quaternion startRot = transform.rotation;
 
         while (t < 1f)
@@ -29,7 +28,6 @@ public class PlayerDance : MonoBehaviour
             yield return null;
         }
     }
-
 
     private void Awake()
     {
@@ -62,6 +60,10 @@ public class PlayerDance : MonoBehaviour
 
     private void OnDanceStarted(InputAction.CallbackContext ctx)
     {
+        // Prevent dancing if a conversation is active
+        if (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)
+            return;
+
         animator.SetBool("IsDancing", true);
 
         if (movement != null)
@@ -77,12 +79,11 @@ public class PlayerDance : MonoBehaviour
     {
         animator.SetBool("IsDancing", false);
 
-        if (movement != null)
+        // Only re-enable movement if no conversation is active
+        if (movement != null && (ConversationManager.Instance == null || !ConversationManager.Instance.IsConversationActive))
             movement.enabled = true;
 
         if (faceCameraRoutine != null)
             StopCoroutine(faceCameraRoutine);
     }
-
-
 }
