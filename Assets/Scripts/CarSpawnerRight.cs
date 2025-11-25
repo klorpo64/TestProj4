@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CarSpawner : MonoBehaviour
+public class CarSpawnerRight : MonoBehaviour
 {
     public GameObject[] carPrefabs;     // Array of different colored car prefabs
     public Transform[] spawnPoints;     // Possible spawn positions
@@ -23,7 +23,7 @@ public class CarSpawner : MonoBehaviour
         // Pick a random prefab
         GameObject carPrefab = carPrefabs[Random.Range(0, carPrefabs.Length)];
 
-        GameObject car = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject car = Instantiate(carPrefab, spawnPoint.position, Quaternion.Euler(-90, -180, -90));
         currentCars++;
 
         Destroy(car, 10f);
