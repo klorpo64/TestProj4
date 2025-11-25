@@ -39,7 +39,11 @@ GraphicsSettings:
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   m_CustomRenderPipeline: {fileID: 11400000, guid: 473c1389641046b46964edb33e5e481f, type: 2}
+=======
+  m_CustomRenderPipeline: {fileID: 11400000, guid: acd05b78e0cd47e4fa0b5110322d618a, type: 2}
+>>>>>>> Stashed changes
 =======
   m_CustomRenderPipeline: {fileID: 11400000, guid: acd05b78e0cd47e4fa0b5110322d618a, type: 2}
 >>>>>>> Stashed changes
