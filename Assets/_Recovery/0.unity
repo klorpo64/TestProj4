@@ -411,6 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   player: {fileID: 311116454}
+  freezeCamera: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,6 +997,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   boxConversation: {fileID: 1415653710}
+  faceTurnSpeed: 5
+  npcAnimator: {fileID: 0}
+  talkAnimationBool: IsTalking
 --- !u!1 &1386397111
 GameObject:
   m_ObjectHideFlags: 0

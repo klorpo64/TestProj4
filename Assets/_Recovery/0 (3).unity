@@ -608,6 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 1229717581}
+  freezeCamera: 0
 --- !u!1001 &351843021
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -764,6 +765,7 @@ MonoBehaviour:
   conversation: {fileID: 371066293}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!65 &371066292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1265,6 +1267,7 @@ MonoBehaviour:
   conversation: {fileID: 502976057}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!114 &502976060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,9 +1640,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press F
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
-  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -3309,6 +3313,7 @@ MonoBehaviour:
   conversation: {fileID: 1401495106}
   promptUI: {fileID: 679679702}
   allowInteraction: 1
+  isRunning: 0
 --- !u!114 &1401495106
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -484,6 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 1229717581}
+  freezeCamera: 0
 --- !u!1001 &351843021
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -578,6 +579,7 @@ MonoBehaviour:
   conversation: {fileID: 0}
   promptUI: {fileID: 0}
   allowInteraction: 1
+  isRunning: 0
 --- !u!114 &371066289
 MonoBehaviour:
   m_ObjectHideFlags: 0
