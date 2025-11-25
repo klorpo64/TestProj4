@@ -15,5 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Beach.unity
     guid: 2f33cb20d2fc753488c336fa28e39b63
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e0731d4205b968146a1800e7c5005434, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: bb8f08bb37766504aac1696578687131, type: 2}
   m_UseUCBPForAssetBundles: 0
