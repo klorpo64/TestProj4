@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Settings/PC_PipelineAsset.asset.meta
 guid: 473c1389641046b46964edb33e5e481f
+========
+guid: acd05b78e0cd47e4fa0b5110322d618a
+>>>>>>>> Stashed changes:Assets/Asset.asset.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000

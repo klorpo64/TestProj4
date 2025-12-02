@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:Assets/Scenes/Walkish/Walkish Baking Set.asset.meta
+guid: 1b7efcb9fd5d5864e8e1d51acdede441
+========
+guid: acd05b78e0cd47e4fa0b5110322d618a
+>>>>>>>> Stashed changes:Assets/Asset.asset.meta
+=======
+guid: 1b7efcb9fd5d5864e8e1d51acdede441
+>>>>>>> Stashed changes
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
