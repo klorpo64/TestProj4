@@ -50,6 +50,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Dive",
+                    "type": "Button",
+                    "id": "e70f8ba8-e9d1-4fb4-8fe4-2ed1b94c91fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -133,7 +142,7 @@
                 {
                     "name": "",
                     "id": "0d6affb2-3b43-4023-ba4d-05af2673c0f4",
-                    "path": "<SwitchProControllerHID>/leftTrigger",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -166,11 +175,22 @@
                 {
                     "name": "",
                     "id": "d8ff4be5-ac0a-497d-a39f-66973eaa2559",
-                    "path": "<SwitchProControllerHID>/rightStick",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "PlatLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dd09cb5d-e4ce-422a-9e2e-e5657cc55650",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dive",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
