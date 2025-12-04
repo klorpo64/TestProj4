@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 308758609bf9d3e49a698f280b28b3c9
+guid: 6d5013b73d8697f4f9bedede5483e15e
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -94,51 +94,51 @@ ModelImporter:
     - boneName: mixamorig:LeftUpLeg
       humanName: LeftUpperLeg
       limit:
-        min: {x: -10, y: -60, z: -90}
-        max: {x: 10, y: 60, z: 50}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:RightUpLeg
       humanName: RightUpperLeg
       limit:
-        min: {x: -10, y: -60, z: -90}
-        max: {x: 10, y: 60, z: 50}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:LeftLeg
       humanName: LeftLowerLeg
       limit:
-        min: {x: -45, y: 0, z: -80}
-        max: {x: 45, y: 0, z: 80}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:RightLeg
       humanName: RightLowerLeg
       limit:
-        min: {x: -45, y: 0, z: -80}
-        max: {x: 45, y: 0, z: 80}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:LeftFoot
       humanName: LeftFoot
       limit:
-        min: {x: 0, y: -10, z: -50}
-        max: {x: 0, y: 10, z: 50}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:RightFoot
       humanName: RightFoot
       limit:
-        min: {x: 0, y: -10, z: -50}
-        max: {x: 0, y: 10, z: 50}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:Spine
       humanName: Spine
       limit:
@@ -158,19 +158,19 @@ ModelImporter:
     - boneName: mixamorig:Neck
       humanName: Neck
       limit:
-        min: {x: -10, y: -10, z: -40}
-        max: {x: 10, y: 10, z: 40}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:Head
       humanName: Head
       limit:
-        min: {x: -20, y: -20, z: -40}
-        max: {x: 20, y: 20, z: 40}
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
         value: {x: 0, y: 0, z: 0}
         length: 0
-        modified: 1
+        modified: 0
     - boneName: mixamorig:LeftShoulder
       humanName: LeftShoulder
       limit:
@@ -542,7 +542,7 @@ ModelImporter:
     - name: mixamorig:LeftHandIndex2
       parentName: mixamorig:LeftHandIndex1
       position: {x: 0.00040322868, y: 0.02589194, z: 0}
-      rotation: {x: 0.032890745, y: 0.0004112137, z: -0.011238198, w: 0.99939567}
+      rotation: {x: 0.032890737, y: 0.0004112137, z: -0.011238196, w: 0.99939567}
       scale: {x: 1, y: 0.99999994, z: 1.0000001}
     - name: mixamorig:LeftHandIndex3
       parentName: mixamorig:LeftHandIndex2
@@ -627,7 +627,7 @@ ModelImporter:
     - name: mixamorig:RightHand
       parentName: mixamorig:RightForeArm
       position: {x: -3.5527136e-17, y: 0.26122972, z: 1.4210854e-16}
-      rotation: {x: -0.00964153, y: -0.0014786792, z: -0.0057202736, w: 0.99993604}
+      rotation: {x: -0.009641528, y: -0.0014786792, z: -0.0057202727, w: 0.99993604}
       scale: {x: 1.0000001, y: 1.0000001, z: 0.9999998}
     - name: mixamorig:RightHandIndex1
       parentName: mixamorig:RightHand
@@ -677,7 +677,7 @@ ModelImporter:
     - name: mixamorig:RightHandThumb2
       parentName: mixamorig:RightHandThumb1
       position: {x: -0.0019130473, y: 0.030358044, z: 0}
-      rotation: {x: 0.037499674, y: -0.00087483786, z: 0.009165679, w: 0.9992542}
+      rotation: {x: 0.037499666, y: -0.00087483786, z: 0.009165677, w: 0.9992542}
       scale: {x: 1, y: 0.9999997, z: 1.0000002}
     - name: mixamorig:RightHandThumb3
       parentName: mixamorig:RightHandThumb2
@@ -689,13 +689,13 @@ ModelImporter:
       position: {x: 0.002436077, y: 0.032971974, z: -1.4210854e-16}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    armTwist: 0.158
-    foreArmTwist: 0.162
-    upperLegTwist: 0
-    legTwist: 0
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
     armStretch: 0.05
     legStretch: 0.05
-    feetSpacing: 0.091
+    feetSpacing: 0
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
