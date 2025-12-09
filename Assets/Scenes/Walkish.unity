@@ -4455,8 +4455,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4634665, y: 2.021379, z: 1.7789464}
-  m_Center: {x: -0.08096546, y: 0.98643035, z: -0.23221767}
+  m_Size: {x: 1.4634665, y: 6.2481465, z: 1.7789465}
+  m_Center: {x: -0.08096546, y: 3.0998142, z: -0.2322178}
 --- !u!114 &401142130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11010,7 +11010,7 @@ Transform:
   m_GameObject: {fileID: 1028299368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -217.2643, y: 3.69, z: 8.87}
+  m_LocalPosition: {x: -206.79, y: 3.69, z: 7.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11681,7 +11681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.ProbeVolume
   mode: 1
-  size: {x: 1248.017, y: 137.81564, z: 1021.01}
+  size: {x: 1248.0168, y: 137.81564, z: 1021.01}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -11721,7 +11721,7 @@ Transform:
   m_GameObject: {fileID: 1098809121}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.530212, y: 65.53285, z: -3}
+  m_LocalPosition: {x: 13.530151, y: 65.53285, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14215,7 +14215,7 @@ MonoBehaviour:
     m_SingletonActionBindings:
     - m_Name: 
       m_Id: 17ddacd9-cf18-4b4b-8569-896ad2cb92f1
-      m_Path: <Keyboard>/f
+      m_Path: <Gamepad>/buttonEast
       m_Interactions: Press
       m_Processors: 
       m_Groups: 
