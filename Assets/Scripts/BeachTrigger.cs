@@ -27,7 +27,8 @@ public class BeachTrigger : MonoBehaviour
         if (!other.CompareTag("Player") || conversationManager == null)
             return;
 
-        if (!GameManager.Instance.friendNPCTalkedTo || !friendNPC.hasReachedDestination)
+        // Only check if the NPC has reached its destination
+        if (!friendNPC.hasReachedDestination)
             conversationManager.StartConversation(notReadyConversation);
         else
             conversationManager.StartConversation(readyConversation);

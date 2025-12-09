@@ -32,7 +32,7 @@ public class DialogueInputAdapter : MonoBehaviour
         // Get the PlatformerController from the parent/self if not linked
         if (playerController == null)
         {
-            playerController = FindObjectOfType<PlatformerController>();
+            playerController = FindFirstObjectByType<PlatformerController>();
         }
     }
 

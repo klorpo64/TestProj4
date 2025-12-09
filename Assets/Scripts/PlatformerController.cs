@@ -55,11 +55,13 @@ public class PlatformerController : MonoBehaviour
     public float flashIntensity = 0.5f;
     public float flashSpeed = 8f;
 
+    [HideInInspector] public bool isGroundedBuffered; // Grounded buffer state
+    [HideInInspector] public Vector3 velocity; // Public for coconut collection checks
+
     private CharacterController controller;
     private PlayerControls controls;
 
     private Vector2 moveInput;
-    private Vector3 velocity;
     private Vector3 horizVelocity;
 
     private bool crouchHeld;
@@ -85,17 +87,19 @@ public class PlatformerController : MonoBehaviour
     private bool isStunned = false;
     private float stunTimer = 0f;
 
-    // Grounded Buffer
+    // Grounded buffer
     private float airTimer = 0f;
-    private bool isGroundedBuffered;
+
+    // Hit by car
+    private bool isHitByCar = false;
 
     // Collider original values
     private float originalHeight;
     private Vector3 originalCenter;
 
-    // Material Emission
-    private Material[][] playerMaterials; // Array of material arrays (one array per renderer)
-    private Color[][] originalEmissionColors; // Array of color arrays (one array per renderer)
+    // Material emission
+    private Material[][] playerMaterials;
+    private Color[][] originalEmissionColors;
 
     void Awake()
     {
@@ -116,7 +120,7 @@ public class PlatformerController : MonoBehaviour
 
     void Start()
     {
-        // Store all materials and their original emission colors from ALL renderers
+        // Store all materials for emission effects
         if (playerRenderers != null && playerRenderers.Length > 0)
         {
             playerMaterials = new Material[playerRenderers.Length][];
@@ -126,17 +130,13 @@ public class PlatformerController : MonoBehaviour
             {
                 if (playerRenderers[r] == null) continue;
 
-                // Get materials for the current renderer
                 playerMaterials[r] = playerRenderers[r].materials;
                 originalEmissionColors[r] = new Color[playerMaterials[r].Length];
 
-                // Store the original emission color for each material in this renderer
                 for (int m = 0; m < playerMaterials[r].Length; m++)
                 {
                     if (playerMaterials[r][m].HasProperty("_EmissionColor"))
-                    {
                         originalEmissionColors[r][m] = playerMaterials[r][m].GetColor("_EmissionColor");
-                    }
                 }
             }
         }
@@ -147,7 +147,13 @@ public class PlatformerController : MonoBehaviour
 
     void Update()
     {
-        // Grounded Buffer Logic
+        // Freeze during cutscene
+        if (GameManager.Instance != null && GameManager.Instance.gameplayFrozen) return;
+
+        // Block movement if hit by car
+        if (isHitByCar) return;
+
+        // Grounded buffer
         if (controller.isGrounded)
         {
             airTimer = 0f;
@@ -156,23 +162,22 @@ public class PlatformerController : MonoBehaviour
         else
         {
             airTimer += Time.deltaTime;
-            if (airTimer > groundedGraceTime) isGroundedBuffered = false;
+            isGroundedBuffered = airTimer <= groundedGraceTime;
         }
 
-        // Check for hard impact landing first (Priority Check)
+        // Check hard landing
         CheckHardLanding();
 
         if (isStunned)
         {
             HandleStun();
-            return; // Stop all movement during stun
+            return;
         }
 
         if (isGroundedBuffered) hasDivedThisAir = false;
 
         UpdateCrouchState();
 
-        // Handle current movement state
         if (isDiving)
             HandleDive();
         else if (isRolling)
@@ -182,13 +187,10 @@ public class PlatformerController : MonoBehaviour
 
         ApplyGravity();
 
-        // Move the character
         Vector3 finalMove = horizVelocity + new Vector3(0, velocity.y, 0);
         controller.Move(finalMove * Time.deltaTime);
 
         UpdateAnimator();
-
-        // Handle the visual feedback for charge
         HandleChargeEffect();
     }
 
@@ -202,9 +204,6 @@ public class PlatformerController : MonoBehaviour
         UpdateAnimator();
     }
 
-    // ------------------------
-    // MOVEMENT & JUMP
-    // ------------------------
     void HandleMovement()
     {
         float targetSpeed = isCrawling ? crawlSpeed : isCrouching ? crouchSpeed : moveSpeed;
@@ -221,7 +220,7 @@ public class PlatformerController : MonoBehaviour
 
     void StartJump()
     {
-        if (isStunned || isDiving)
+        if (isStunned || isDiving || (GameManager.Instance != null && GameManager.Instance.gameplayFrozen))
             return;
 
         if (isGroundedBuffered)
@@ -247,11 +246,8 @@ public class PlatformerController : MonoBehaviour
         jumpStarted = true;
         isGroundedBuffered = false;
 
-        // Reset emission after jumping out of a charged crouch
         if (crouchHoldTime >= requiredCrouchHold)
-        {
             ResetMaterialEmission();
-        }
     }
 
     void ApplyGravity()
@@ -262,43 +258,31 @@ public class PlatformerController : MonoBehaviour
             velocity.y = gravityStickiness;
     }
 
-    // ------------------------
-    // DIVE LOGIC
-    // ------------------------
     void StartDive()
     {
         if (isStunned || isGroundedBuffered || isDiving || hasDivedThisAir) return;
 
         hasDivedThisAir = true;
         isDiving = true;
-
         velocity.y = Mathf.Sqrt(diveInitialBounce * -2f * gravity);
         diveDirection = (transform.forward * diveForwardBoost + Vector3.down * 0.25f).normalized;
     }
 
     void HandleDive()
     {
-        horizVelocity = new Vector3(diveDirection.x, 0f, diveDirection.z) * diveSpeed;
+        horizVelocity = new Vector3(diveDirection.x, 0, diveDirection.z) * diveSpeed;
         velocity.y += gravity * Time.deltaTime * 0.6f;
 
         if (controller.isGrounded)
         {
             isDiving = false;
             if (moveInput.sqrMagnitude > 0.1f)
-            {
                 StartRoll();
-            }
             else
-            {
                 horizVelocity = Vector3.zero;
-            }
-            return;
         }
     }
 
-    // ------------------------
-    // ROLL LOGIC 
-    // ------------------------
     void StartRoll()
     {
         isRolling = true;
@@ -314,7 +298,6 @@ public class PlatformerController : MonoBehaviour
         Vector3 right = cameraTransform.right; right.y = 0; right.Normalize();
         Vector3 moveDir = forward * moveInput.y + right * moveInput.x;
 
-        // Hard Stop
         if (moveInput.sqrMagnitude < 0.1f)
         {
             horizVelocity = Vector3.zero;
@@ -323,40 +306,21 @@ public class PlatformerController : MonoBehaviour
             return;
         }
 
-        // Phase 1: Fixed Speed Boost with Steering
         if (rollTimer > 0f)
         {
             rollTimer -= Time.deltaTime;
-
             if (moveDir.sqrMagnitude > 0.01f)
             {
                 horizVelocity = moveDir * currentRollSpeed;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.deltaTime);
-            }
-
-            if (rollTimer <= 0f)
-            {
-                rollTimer = 0f;
             }
         }
-        // Phase 2: Decaying Speed with Control
         else
         {
-            float runTargetSpeed;
-            float effectiveDecay = rollDecay;
+            float runTargetSpeed = moveSpeed;
+            if (isCrouching || isCrawling) runTargetSpeed *= 1.5f;
 
-            // Crouch Decay Logic
-            if (isCrouching || isCrawling)
-            {
-                runTargetSpeed = moveSpeed * 1.5f;
-                effectiveDecay = rollDecay * 10f;
-            }
-            else
-            {
-                runTargetSpeed = moveSpeed;
-            }
-
-            currentRollSpeed = Mathf.MoveTowards(currentRollSpeed, runTargetSpeed, effectiveDecay * Time.deltaTime);
+            currentRollSpeed = Mathf.MoveTowards(currentRollSpeed, runTargetSpeed, rollDecay * Time.deltaTime);
 
             if (moveDir.sqrMagnitude > 0.01f)
             {
@@ -364,27 +328,17 @@ public class PlatformerController : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.deltaTime);
             }
 
-            // End Roll Conditions
-            float targetThreshold = (runTargetSpeed > 0) ? runTargetSpeed + 0.1f : 0.1f;
-
-            if (currentRollSpeed < targetThreshold)
-            {
+            if (currentRollSpeed < runTargetSpeed + 0.1f)
                 isRolling = false;
-            }
         }
     }
 
-    // ------------------------
-    // HELPERS
-    // ------------------------
     void CheckHardLanding()
     {
-        // Hard Landing Override
         if (controller.isGrounded && velocity.y <= hardLandingVelocity && !isStunned)
         {
             isStunned = true;
             stunTimer = stunDuration;
-
             horizVelocity = Vector3.zero;
             isDiving = false;
             isRolling = false;
@@ -410,7 +364,7 @@ public class PlatformerController : MonoBehaviour
         else
         {
             crouchHoldTime = 0f;
-            ResetMaterialEmission(); // Reset emission when charge is lost
+            ResetMaterialEmission();
             if (!forcedCrouch)
             {
                 isCrouching = false; isCrawling = false;
@@ -425,23 +379,19 @@ public class PlatformerController : MonoBehaviour
         }
     }
 
-    // Handles the visual pulse effect for the charged jump
     void HandleChargeEffect()
     {
         if (playerRenderers == null || playerRenderers.Length == 0) return;
 
-        // Pulse the material if fully charged AND crouching
         if (crouchHoldTime >= requiredCrouchHold && (isCrouching || isCrawling))
         {
             float pulse = (Mathf.Sin(Time.time * flashSpeed) * 0.5f + 0.5f) * flashIntensity;
             Color emission = chargeColor * pulse;
 
-            // Loop through all renderers (r)
             for (int r = 0; r < playerRenderers.Length; r++)
             {
                 if (playerMaterials[r] == null) continue;
 
-                // Loop through all materials (m) on the current renderer
                 for (int m = 0; m < playerMaterials[r].Length; m++)
                 {
                     if (playerMaterials[r][m].HasProperty("_EmissionColor"))
@@ -452,34 +402,24 @@ public class PlatformerController : MonoBehaviour
                 }
             }
         }
-        else if (crouchHoldTime < requiredCrouchHold && (isCrouching || isCrawling))
+        else
         {
-            // If crouching but not charged, maintain original emission
-            // We call ResetMaterialEmission to ensure we restore colors without duplicating the reset logic
             ResetMaterialEmission();
         }
     }
 
-    // Resets the material emission to its original state
     void ResetMaterialEmission()
     {
         if (playerRenderers == null || playerRenderers.Length == 0) return;
 
-        // Loop through all renderers (r)
         for (int r = 0; r < playerRenderers.Length; r++)
         {
             if (playerMaterials[r] == null) continue;
 
-            // Loop through all materials (m) on the current renderer
-            if (playerMaterials[r].Length == originalEmissionColors[r].Length)
+            for (int m = 0; m < playerMaterials[r].Length; m++)
             {
-                for (int m = 0; m < playerMaterials[r].Length; m++)
-                {
-                    if (playerMaterials[r][m].HasProperty("_EmissionColor"))
-                    {
-                        playerMaterials[r][m].SetColor("_EmissionColor", originalEmissionColors[r][m]);
-                    }
-                }
+                if (playerMaterials[r][m].HasProperty("_EmissionColor"))
+                    playerMaterials[r][m].SetColor("_EmissionColor", originalEmissionColors[r][m]);
             }
         }
     }
@@ -520,5 +460,14 @@ public class PlatformerController : MonoBehaviour
             animator.SetTrigger("JumpTriggered");
             jumpStarted = false;
         }
+    }
+
+    // Car hit logic
+    public void HandleCarHit()
+    {
+        if (isHitByCar) return;
+
+        isHitByCar = true;
+        controller.enabled = false;
     }
 }
