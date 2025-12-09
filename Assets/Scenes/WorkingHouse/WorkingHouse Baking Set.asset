@@ -152,8 +152,8 @@ MonoBehaviour:
             elementCount: 4
         m_Asset: {fileID: 4900000, guid: e8500487014fffb4f90322d1d1225d45, type: 3}
       cellProbeOcclusionDataAsset:
-        m_AssetGUID: 7ee684b3bef99c94ca5c14ba9c11b020
-        m_StreamableAssetPath: APVStreamingAssets\aefaffc38b3a6aa4ba661dcded3f4413\7ee684b3bef99c94ca5c14ba9c11b020.bytes
+        m_AssetGUID: 
+        m_StreamableAssetPath: APVStreamingAssets\aefaffc38b3a6aa4ba661dcded3f4413\.bytes
         m_ElementSize: 0
         m_StreamableCellDescs:
           m_Keys: 00000000060000000200000008000000
