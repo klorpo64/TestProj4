@@ -49,7 +49,7 @@ public class KratosConversationStarter : MonoBehaviour
 
     void Update()
     {
-        if (canTalk && Input.GetKeyDown(KeyCode.F))
+        if (canTalk && Input.GetButtonDown("Fire2"))
         {
             if (!ConversationManager.Instance.IsConversationActive)
             {
