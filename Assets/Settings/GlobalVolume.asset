@@ -144,10 +144,10 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   planetRadius:
-    m_OverrideState: 0
-    m_Value: 6378.1
+    m_OverrideState: 1
+    m_Value: 1000
   renderingSpace:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   centerMode:
     m_OverrideState: 0
@@ -300,21 +300,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5944d5dca791344186c8265c2b87ac4, type: 3}
   m_Name: VolumetricClouds
   m_EditorClassIdentifier: VolumetricCloudsURP::VolumetricClouds
-  active: 1
+  active: 0
   state:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   localClouds:
     m_OverrideState: 0
     m_Value: 0
   m_CloudPreset:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0
   densityMultiplier:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.4
   densityCurve:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
       serializedVersion: 2
       m_Curve:
@@ -328,7 +328,16 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.15
+        time: 0.05
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.75
         value: 1
         inSlope: 0
         outSlope: 0
@@ -338,7 +347,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -349,19 +358,19 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   shapeFactor:
-    m_OverrideState: 0
-    m_Value: 0.9
+    m_OverrideState: 1
+    m_Value: 0.95
   shapeScale:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 5
   erosionFactor:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.8
   erosionScale:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 107
   erosionCurve:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
       serializedVersion: 2
       m_Curve:
@@ -396,7 +405,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   ambientOcclusionCurve:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
       serializedVersion: 2
       m_Curve:
@@ -411,7 +420,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 0.25
-        value: 0.4
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -434,17 +443,17 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   microErosionFactor:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.5
   microErosionScale:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 200
   bottomAltitude:
-    m_OverrideState: 0
-    m_Value: 1200
+    m_OverrideState: 1
+    m_Value: 3000
   altitudeRange:
-    m_OverrideState: 0
-    m_Value: 2000
+    m_OverrideState: 1
+    m_Value: 1000
   shapeOffset:
     m_OverrideState: 0
     m_Value: {x: 0, y: 0, z: 0}
@@ -482,8 +491,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0.1
   scatteringTint:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0.106513575, b: 0.4932614, a: 1}
   powderEffectIntensity:
     m_OverrideState: 0
     m_Value: 0.25
@@ -495,7 +504,7 @@ MonoBehaviour:
     m_Value: 0
   shadowResolution:
     m_OverrideState: 0
-    m_Value: 256
+    m_Value: 128
   shadowDistance:
     m_OverrideState: 0
     m_Value: 8000
