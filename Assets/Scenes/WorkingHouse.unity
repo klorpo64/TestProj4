@@ -1438,7 +1438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e090e9442303c446a5280f226011f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseManager
-  pauseMenuUI: {fileID: 0}
+  pauseMenuUI: {fileID: 1607755402}
 --- !u!4 &461557327
 Transform:
   m_ObjectHideFlags: 0
