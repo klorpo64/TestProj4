@@ -2159,6 +2159,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1698875132}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1698875139}
   m_SourcePrefab: {fileID: 100100000, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
 --- !u!1001 &410740943
 PrefabInstance:
@@ -3491,7 +3494,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136756096}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9cd0bde4da9ef64bb488ae17a316b9d, type: 3}
   m_Name: 
@@ -3507,7 +3510,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136756096}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a31132083f73505479aaa29d843c94eb, type: 3}
   m_Name: 
@@ -3552,6 +3555,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCFaceTarget
   target: {fileID: 463248193}
   rotationSpeed: 5
+--- !u!114 &1136756104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136756096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277c196548835244496392d3b7a6a552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  conversation: {fileID: 390442555}
 --- !u!1 &1202872294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4660,6 +4676,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a0d7c57786df3f49a27e63c95892eed, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1136756102}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a0d7c57786df3f49a27e63c95892eed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1136756104}
   m_SourcePrefab: {fileID: 100100000, guid: 5a0d7c57786df3f49a27e63c95892eed, type: 3}
 --- !u!144 &1692587957
 CharacterJoint:
@@ -4769,7 +4788,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698875130}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9cd0bde4da9ef64bb488ae17a316b9d, type: 3}
   m_Name: 
@@ -4785,7 +4804,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698875130}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a31132083f73505479aaa29d843c94eb, type: 3}
   m_Name: 
@@ -4855,6 +4874,19 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
   m_PrefabInstance: {fileID: 408744675}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1698875139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698875130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277c196548835244496392d3b7a6a552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  conversation: {fileID: 859914873}
 --- !u!1 &1736261422
 GameObject:
   m_ObjectHideFlags: 0
@@ -5456,7 +5488,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: df70fa95-8a34-4494-b137-73ab6b9c7d37
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &1974413742
@@ -5495,7 +5527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844ad603ec685594a93d6529c3d639a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
-  interactionText: {fileID: 0}
+  interactionText: {fileID: 2088878283}
   rotationSpeed: 5
 --- !u!114 &1974413745
 MonoBehaviour:
@@ -5893,7 +5925,7 @@ GameObject:
   - component: {fileID: 2088878284}
   - component: {fileID: 2088878283}
   m_Layer: 5
-  m_Name: PressF
+  m_Name: Press Interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5938,7 +5970,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press F
+  m_text: Press Interact
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -6004,7 +6036,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -155.40735, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

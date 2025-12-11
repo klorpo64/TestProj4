@@ -7,19 +7,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    // Define the super tiny scale used for initial challenge spawn
     private const float TINY_SCALE = 0.0000000000001f;
-    // Define the regular (final) scale used for scene-loaded coconuts
     private const float REGULAR_SCALE = 0.01f;
 
     [System.Serializable]
     public struct PersistentCoconut
     {
-        public string id;           // Matches CoconutSpawnPoint.coconutID
+        public string id;               // Matches CoconutSpawnPoint.coconutID
         public string spawnPointName;
         public bool isChallengeSpawn;
 
         public Vector3 cutsceneOffset;
+
+        public string sceneName;        // The scene this coconut belongs to
     }
 
     [Header("Golden Coconut Settings")]
@@ -127,9 +127,6 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    // -----------------------------
-    // Spawn a coconut at a location (used ONLY for persistent/scene loading)
-    // -----------------------------
     public void SpawnCoconutAtLocation(string coconutID, Vector3 spawnPosition, bool playCutscene)
     {
         if (spawnedCoconutIDsInScene.Contains(coconutID)) return;
@@ -145,7 +142,6 @@ public class GameManager : MonoBehaviour
 
         GameObject coconut = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
-        // Scene-Loaded coconuts spawn at the final 0.01 scale
         coconut.transform.localScale = new Vector3(REGULAR_SCALE, REGULAR_SCALE, REGULAR_SCALE);
 
         spawnedCoconutIDsInScene.Add(coconutID);
@@ -153,21 +149,16 @@ public class GameManager : MonoBehaviour
         GoldenCoconutController gcc = coconut.GetComponent<GoldenCoconutController>();
         if (gcc == null)
         {
-            Debug.LogError($"Coconut {coconutID} spawned but is missing GoldenCoconutController!");
+            Debug.LogError($"Coconut {coconutID} spawned but missing GoldenCoconutController!");
             return;
         }
 
         gcc.Initialize(coconutID, alreadyCollected, false);
 
         if (!alreadyCollected)
-        {
             gcc.StartIdleHover();
-        }
     }
 
-    // -----------------------------
-    // Spawn a challenge coconut (3 Arguments Standard)
-    // -----------------------------
     public void SpawnGoldenCoconut(string coconutID, Transform spawnTransform, bool isChallengeSpawn)
     {
         bool alreadyCollected = IsCoconutCollected(coconutID);
@@ -182,7 +173,7 @@ public class GameManager : MonoBehaviour
 
         if (spawnedCoconutIDsInScene.Contains(coconutID))
         {
-            Debug.Log("Coconut " + coconutID + " already spawned in this scene and uncollected.");
+            Debug.Log("Coconut " + coconutID + " already spawned in this scene.");
             return;
         }
 
@@ -204,9 +195,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // -----------------------------
-    // Helper: Consolidated Coconut Instantiation Logic 
-    // -----------------------------
     private Transform SpawnCoconut(string coconutID, Vector3 spawnPosition, bool startIdle, bool isCollected, bool isChallengeSpawn)
     {
         GameObject prefabToSpawn = isCollected ? collectedCoconutPrefab : goldenCoconutPrefab;
@@ -219,23 +207,17 @@ public class GameManager : MonoBehaviour
 
         GameObject coconut = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
-        // Set scale based on type
         if (isChallengeSpawn)
-        {
             coconut.transform.localScale = new Vector3(TINY_SCALE, TINY_SCALE, TINY_SCALE);
-        }
         else
-        {
-            // Default to regular scale if not a challenge spawn
             coconut.transform.localScale = new Vector3(REGULAR_SCALE, REGULAR_SCALE, REGULAR_SCALE);
-        }
 
         spawnedCoconutIDsInScene.Add(coconutID);
 
         GoldenCoconutController gcc = coconut.GetComponent<GoldenCoconutController>();
         if (gcc == null)
         {
-            Debug.LogError($"Coconut {coconutID} spawned but is missing GoldenCoconutController!");
+            Debug.LogError($"Coconut {coconutID} missing GoldenCoconutController!");
             Destroy(coconut);
             return null;
         }
@@ -243,24 +225,16 @@ public class GameManager : MonoBehaviour
         gcc.Initialize(coconutID, isCollected, prefabToSpawn == collectedCoconutPrefab);
 
         if (startIdle)
-        {
             gcc.StartIdleHover();
-        }
 
         return coconut.transform;
     }
 
-    // -----------------------------
-    // Overload for compatibility (if older scripts pass 4 args)
-    // -----------------------------
     public void SpawnGoldenCoconut(string coconutID, Transform spawnTransform, bool isChallengeSpawn, bool unusedArgument)
     {
         SpawnGoldenCoconut(coconutID, spawnTransform, isChallengeSpawn);
     }
 
-    // -----------------------------
-    // Coconut spawn cutscene coroutine (SMOOTH PAN LOGIC)
-    // -----------------------------
     private IEnumerator CoconutSpawnCutscene(Transform coconutTransform, Vector3 playerPosition, Vector3 targetPosition, Vector3 offset)
     {
         yield return null;
@@ -269,7 +243,7 @@ public class GameManager : MonoBehaviour
 
         if (cameraController == null || playerTransform == null || coconutTransform == null)
         {
-            Debug.LogError("Cutscene dependencies missing! Aborting cutscene.");
+            Debug.LogError("Cutscene dependencies missing!");
             if (gcc != null) gcc.StartIdleHover();
             gameplayFrozen = false;
             yield break;
@@ -278,23 +252,17 @@ public class GameManager : MonoBehaviour
         gameplayFrozen = true;
         cameraController.LockCamera(true);
 
-        // --- CALCULATIONS ---
-
-        // 1. Player Camera View
         Vector3 playerCamPos = playerTransform.position + cameraController.cameraOffset;
         Quaternion playerCamRot = Quaternion.LookRotation(playerTransform.position - playerCamPos, Vector3.up);
 
-        // 2. Coconut Camera View 
         Vector3 coconutCamPos = targetPosition + offset;
         Quaternion coconutLookRot = Quaternion.LookRotation(targetPosition - coconutCamPos, Vector3.up);
         Quaternion downwardTilt = Quaternion.Euler(cutsceneDownwardPitch, 0, 0);
         Quaternion coconutCamRot = coconutLookRot * downwardTilt;
 
-        // 3. Current Camera State 
         Vector3 startPos = cameraController.transform.position;
         Quaternion startRot = cameraController.transform.rotation;
 
-        // --- STAGE 1: SMOOTH PAN TO COCONUT ---
         float timer = 0f;
         while (timer < cameraPanDuration)
         {
@@ -304,10 +272,10 @@ public class GameManager : MonoBehaviour
             cameraController.transform.rotation = Quaternion.Slerp(startRot, coconutCamRot, t);
             yield return null;
         }
+
         cameraController.transform.position = coconutCamPos;
         cameraController.transform.rotation = coconutCamRot;
 
-        // --- STAGE 2: WAIT AND SPAWN ANIMATION ---
         if (coconutSpawnSound != null && audioSource != null)
             audioSource.PlayOneShot(coconutSpawnSound);
 
@@ -317,7 +285,6 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(cutsceneWaitDuration + 0.5f);
         }
 
-        // --- STAGE 3: SMOOTH PAN BACK TO PLAYER ---
         startPos = cameraController.transform.position;
         startRot = cameraController.transform.rotation;
 
@@ -341,9 +308,6 @@ public class GameManager : MonoBehaviour
             gcc.StartIdleHover();
     }
 
-    // -----------------------------
-    // Coconut collection
-    // -----------------------------
     public void CollectCoconut(string coconutID)
     {
         if (!collectedCoconutIDs.Contains(coconutID))
@@ -367,19 +331,26 @@ public class GameManager : MonoBehaviour
     }
 
     // -----------------------------
-    // Only spawn persistent coconuts that are NOT challenge spawns
+    // Multi-scene persistent coconut spawning
     // -----------------------------
     private void SpawnAllPersistentCoconuts()
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+
         foreach (var coconut in persistentCoconuts)
         {
             if (coconut.isChallengeSpawn)
                 continue;
 
+            // Only spawn coconuts for **this** scene
+            if (coconut.sceneName != currentScene)
+                continue;
+
             CoconutSpawnPoint sp = FindSpawnPoint(coconut.id);
+
             if (sp == null)
             {
-                Debug.LogWarning($"No CoconutSpawnPoint with ID '{coconut.id}' found in scene.");
+                Debug.LogWarning($"No CoconutSpawnPoint with ID '{coconut.id}' found in scene '{currentScene}'.");
                 continue;
             }
 
@@ -397,5 +368,4 @@ public class GameManager : MonoBehaviour
         }
         return list;
     }
-
 }

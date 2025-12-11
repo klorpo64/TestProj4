@@ -15,7 +15,7 @@ public class KratosConversationStarter : MonoBehaviour, IInteractable
 
     void OnTriggerEnter(Collider other)
     {
-        playerInteract = other.GetComponent<PlayerInteract>();
+        playerInteract = other.GetComponentInParent<PlayerInteract>();
         if (playerInteract != null)
         {
             playerInteract.SetCurrentTarget(this);
@@ -24,10 +24,10 @@ public class KratosConversationStarter : MonoBehaviour, IInteractable
 
     void OnTriggerExit(Collider other)
     {
-        PlayerInteract leavingPlayer = other.GetComponent<PlayerInteract>();
-        if (leavingPlayer != null && leavingPlayer == playerInteract)
+        PlayerInteract leavingPlayer = other.GetComponentInParent<PlayerInteract>();
+        if (leavingPlayer != null)
         {
-            playerInteract.ClearTarget(this);
+            leavingPlayer.ClearTarget(this);
             playerInteract = null;
         }
     }

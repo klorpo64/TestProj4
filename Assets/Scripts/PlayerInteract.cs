@@ -73,12 +73,14 @@ public class PlayerInteract : MonoBehaviour
         isInteracting = true;
         HidePrompt();
 
+        // Disable movement
         foreach (var controller in movementControllers)
             if (controller != null)
                 controller.enabled = false;
 
+        // Force player into idle animation
         if (anim != null)
-            anim.SetTrigger("Idle");
+            anim.CrossFade("Idle", 0.2f);
     }
 
     private void OnConversationEnded()

@@ -3115,7 +3115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 284267367}
-  - component: {fileID: 284267366}
+  - component: {fileID: 284267368}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -3123,7 +3123,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &284267366
+--- !u!4 &284267367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284267365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 82.14661, y: 6.95015, z: 35.59564}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &284267368
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3142,31 +3157,33 @@ MonoBehaviour:
     spawnPointName: CarJumpCoconutSpawnPoint
     isChallengeSpawn: 1
     cutsceneOffset: {x: 0, y: 3, z: -3}
+    sceneName: Walkish
   - id: Coconut on the Hill
     spawnPointName: HillCoconutSpawnPoint
     isChallengeSpawn: 0
     cutsceneOffset: {x: 0, y: 3, z: -3}
+    sceneName: Walkish
+  - id: Mountain Climber
+    spawnPointName: MountainCoconutSpawnPoint
+    isChallengeSpawn: 0
+    cutsceneOffset: {x: 0, y: 3, z: -3}
+    sceneName: IslandScene
+  - id: High Jump Coconut
+    spawnPointName: IslandCoconutSpawnPoint
+    isChallengeSpawn: 0
+    cutsceneOffset: {x: 0, y: 3, z: -3}
+    sceneName: IslandScene
+  - id: X Marks The Spot
+    spawnPointName: XMarksTheSpotCoconutSpawnPoint
+    isChallengeSpawn: 0
+    cutsceneOffset: {x: 0, y: 3, z: -3}
+    sceneName: IslandScene
   cutsceneWaitDuration: 1.5
   cameraPanDuration: 1
   cutsceneDownwardPitch: 5
   coconutSpawnSound: {fileID: 8300000, guid: 755fe178327ef6c458ecf54870f5f4f9, type: 3}
   coconutCollectSound: {fileID: 8300000, guid: 58ca4950817bf0847bfb1e589aff6b64, type: 3}
   gameplayFrozen: 0
---- !u!4 &284267367
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 284267365}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 82.14661, y: 6.95015, z: 35.59564}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &285841810
 GameObject:
   m_ObjectHideFlags: 0
@@ -14716,6 +14733,8 @@ MonoBehaviour:
   chargeColor: {r: 1, g: 1, b: 1, a: 1}
   flashIntensity: 0.5
   flashSpeed: 8
+  waterTag: Water
+  waterSurfaceOffset: 0.1
   isGroundedBuffered: 0
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &1283614875
@@ -17453,6 +17472,8 @@ MonoBehaviour:
   sensitivity: 150
   minY: -30
   maxY: 65
+  cutsceneMoveSpeed: 5
+  cutsceneRotateSpeed: 5
 --- !u!114 &1550551753
 MonoBehaviour:
   m_ObjectHideFlags: 0
