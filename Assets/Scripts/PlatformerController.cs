@@ -4,8 +4,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlatformerController : MonoBehaviour
 {
-    // --- Existing Header Fields ---
-
     [Header("Movement")]
     public float moveSpeed = 9f;
     public float crouchSpeed = 3f;
@@ -57,17 +55,15 @@ public class PlatformerController : MonoBehaviour
     public float flashIntensity = 0.5f;
     public float flashSpeed = 8f;
 
+    [Header("Water Settings")]
+    public string waterTag = "Water";
+    public float waterSurfaceOffset = 0.1f;
+
     [HideInInspector] public bool isGroundedBuffered;
     [HideInInspector] public Vector3 velocity;
 
-    // REMOVED: isFrozenForCutscene. Using GameManager.Instance.gameplayFrozen instead.
-
     private CharacterController controller;
-
-    // NOTE: This assumes your Player input action class is called PlayerControls, 
-    // which is used in your existing code. If you use InputSystem_Actions, change this:
     private PlayerControls controls;
-
     private Vector2 moveInput;
     private Vector3 horizVelocity;
 
@@ -79,69 +75,56 @@ public class PlatformerController : MonoBehaviour
     private bool canDoubleJump;
     private bool jumpStarted;
 
-    // Dive
     private bool isDiving;
     private Vector3 diveDirection;
     private bool hasDivedThisAir = false;
 
-    // Roll
     private bool isRolling;
     private float rollTimer;
     private Vector3 rollDir;
     private float currentRollSpeed;
 
-    // Hard landing stun
     private bool isStunned = false;
     private float stunTimer = 0f;
 
-    // Grounded buffer
     private float airTimer = 0f;
 
-    // Hit by car
     private bool isHitByCar = false;
 
-    // Collider original values
     private float originalHeight;
     private Vector3 originalCenter;
 
-    // Material emission
     private Material[][] playerMaterials;
     private Color[][] originalEmissionColors;
+
+    // Swimming
+    private bool isInWater = false;
+    private float hitWaterY = 0f;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        controls = new PlayerControls(); // Assumes PlayerControls is the generated class name
+        controls = new PlayerControls();
 
         originalHeight = controller.height;
         originalCenter = controller.center;
 
-        // --- UPDATED INPUT SUBSCRIPTIONS ---
-        // Use lambda functions to check for the global freeze state before performing actions
-
         controls.Player.Move.performed += ctx => moveInput = GetMoveInput(ctx);
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
-
         controls.Player.Jump.performed += ctx => { if (!IsGameFrozen()) StartJump(); };
-
-        // Crouch input only updates the boolean, logic in UpdateCrouchState handles timing
         controls.Player.Crouch.performed += ctx => crouchHeld = !IsGameFrozen();
         controls.Player.Crouch.canceled += ctx => crouchHeld = false;
-
         controls.Player.Dive.performed += ctx => { if (!IsGameFrozen()) StartDive(); };
 
-        // Initialize materials
         InitializeMaterials();
     }
 
-    // Helper to filter move input when game is frozen
     private Vector2 GetMoveInput(InputAction.CallbackContext ctx)
     {
         if (IsGameFrozen()) return Vector2.zero;
         return ctx.ReadValue<Vector2>();
     }
 
-    // Helper to check for global freeze state
     private bool IsGameFrozen()
     {
         return GameManager.Instance != null && GameManager.Instance.gameplayFrozen;
@@ -149,7 +132,6 @@ public class PlatformerController : MonoBehaviour
 
     void InitializeMaterials()
     {
-        // Store all materials for emission effects
         if (playerRenderers != null && playerRenderers.Length > 0)
         {
             playerMaterials = new Material[playerRenderers.Length][];
@@ -171,31 +153,25 @@ public class PlatformerController : MonoBehaviour
         }
     }
 
-    // Removed the redundant Start() method as material initialization is now in Awake
-
     void OnEnable() => controls.Enable();
     void OnDisable() => controls.Disable();
 
     void Update()
     {
-        // Check global freeze state at the start of Update
         if (IsGameFrozen())
         {
-            // Stop all movement but continue applying gravity/stickiness if not stunned
             horizVelocity = Vector3.zero;
             if (controller.isGrounded && velocity.y < 0) velocity.y = gravityStickiness;
-
-            // Still move the character controller, but only vertically if not moving horizontally
             controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
-
-            UpdateAnimator(); // Update animator to show standing/idle state
+            UpdateAnimator();
             return;
         }
 
-        // Block movement if hit by car
         if (isHitByCar) return;
 
-        // Grounded buffer
+        // Check water
+        CheckWater();
+
         if (controller.isGrounded)
         {
             airTimer = 0f;
@@ -207,7 +183,6 @@ public class PlatformerController : MonoBehaviour
             isGroundedBuffered = airTimer <= groundedGraceTime;
         }
 
-        // Check hard landing
         CheckHardLanding();
 
         if (isStunned)
@@ -220,14 +195,24 @@ public class PlatformerController : MonoBehaviour
 
         UpdateCrouchState();
 
-        if (isDiving)
+        if (isInWater)
+        {
+            HandleSwimming();
+        }
+        else if (isDiving)
+        {
             HandleDive();
+        }
         else if (isRolling)
+        {
             HandleRoll();
+        }
         else
+        {
             HandleMovement();
+        }
 
-        ApplyGravity();
+        if (!isInWater) ApplyGravity();
 
         Vector3 finalMove = horizVelocity + new Vector3(0, velocity.y, 0);
         controller.Move(finalMove * Time.deltaTime);
@@ -236,13 +221,70 @@ public class PlatformerController : MonoBehaviour
         HandleChargeEffect();
     }
 
+    private void CheckWater()
+    {
+        isInWater = false;
+        Collider[] hits = Physics.OverlapCapsule(transform.position + controller.center - Vector3.up * controller.height / 2,
+                                                 transform.position + controller.center + Vector3.up * controller.height / 2,
+                                                 controller.radius);
+
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag(waterTag))
+            {
+                isInWater = true;
+                hitWaterY = hit.bounds.max.y;
+                break;
+            }
+        }
+
+        if (isInWater && isDiving)
+        {
+            // Stop diving if player enters water
+            isDiving = false;
+            horizVelocity = Vector3.zero;
+        }
+    }
+
+    private void HandleSwimming()
+    {
+        // Horizontal movement
+        Vector3 forward = cameraTransform.forward; forward.y = 0; forward.Normalize();
+        Vector3 right = cameraTransform.right; right.y = 0; right.Normalize();
+        Vector3 moveDir = forward * moveInput.y + right * moveInput.x;
+
+        float targetSpeed = isCrawling ? crawlSpeed : isCrouching ? crouchSpeed : moveSpeed;
+        horizVelocity = moveDir * targetSpeed;
+
+        // Rotate XZ only
+        if (moveDir.sqrMagnitude > 0.01f)
+        {
+            Vector3 lookDir = new Vector3(moveDir.x, 0, moveDir.z);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDir), 15f * Time.deltaTime);
+        }
+
+        // Lock vertical position to water surface
+        Vector3 pos = transform.position;
+        pos.y = hitWaterY + waterSurfaceOffset;
+        transform.position = pos;
+        velocity.y = 0f;
+    }
+
     void HandleStun()
     {
         stunTimer -= Time.deltaTime;
         horizVelocity = Vector3.zero;
+
+        // While stunned, keep a small downward velocity so the controller stays grounded if falling
         velocity.y = -2f;
-        if (stunTimer <= 0f) isStunned = false;
+
+        if (stunTimer <= 0f)
+            isStunned = false;
+
+        // Apply vertical movement during stun
         controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
+
+        // Update animations while stunned
         UpdateAnimator();
     }
 
@@ -262,9 +304,7 @@ public class PlatformerController : MonoBehaviour
 
     void StartJump()
     {
-        // CRITICAL CHECK: Input event handler needs to check freeze state again
-        if (isStunned || isDiving)
-            return;
+        if (isStunned || isDiving || isInWater) return; // cannot jump in water
 
         if (isGroundedBuffered)
         {
@@ -288,9 +328,7 @@ public class PlatformerController : MonoBehaviour
         velocity.y = Mathf.Sqrt(height * -2f * gravity);
         jumpStarted = true;
         isGroundedBuffered = false;
-
-        if (crouchHoldTime >= requiredCrouchHold)
-            ResetMaterialEmission();
+        if (crouchHoldTime >= requiredCrouchHold) ResetMaterialEmission();
     }
 
     void ApplyGravity()
@@ -303,9 +341,7 @@ public class PlatformerController : MonoBehaviour
 
     void StartDive()
     {
-        // CRITICAL CHECK: Input event handler needs to check freeze state again
-        if (isStunned || isGroundedBuffered || isDiving || hasDivedThisAir) return;
-
+        if (isStunned || isGroundedBuffered || isDiving || hasDivedThisAir || isInWater) return; // cannot dive while swimming
         hasDivedThisAir = true;
         isDiving = true;
         velocity.y = Mathf.Sqrt(diveInitialBounce * -2f * gravity);
@@ -491,14 +527,14 @@ public class PlatformerController : MonoBehaviour
 
         animator.SetFloat("Speed", currentSpeed);
         animator.SetFloat("AnimationSpeedMultiplier", Mathf.Clamp(animationSpeedMultiplier, 1.0f, 3.0f));
-
         animator.SetFloat("VerticalVelocity", isGroundedBuffered ? 0f : velocity.y);
 
-        animator.SetBool("IsGrounded", controller.isGrounded); // Use raw isGrounded for animator, buffered for logic
+        animator.SetBool("IsGrounded", controller.isGrounded);
         animator.SetBool("IsCrouching", isCrouching);
         animator.SetBool("IsCrawling", isCrawling);
         animator.SetBool("IsDiving", isDiving);
         animator.SetBool("IsRolling", isRolling);
+        animator.SetBool("IsSwimming", isInWater);
 
         if (jumpStarted)
         {
@@ -510,7 +546,6 @@ public class PlatformerController : MonoBehaviour
     public void HandleCarHit()
     {
         if (isHitByCar) return;
-
         isHitByCar = true;
         controller.enabled = false;
     }
