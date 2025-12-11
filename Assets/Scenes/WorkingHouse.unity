@@ -792,6 +792,7 @@ MonoBehaviour:
   promptUI: {fileID: 679679702}
   allowInteraction: 1
   isRunning: 0
+  playerInRange: 0
 --- !u!65 &371066292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -820,7 +821,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371066285}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
   m_Name: 
@@ -866,7 +867,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371066285}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9cd0bde4da9ef64bb488ae17a316b9d, type: 3}
   m_Name: 
@@ -919,6 +920,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.7185602, y: 1, z: 2.2924123}
   m_Center: {x: -0.14879918, y: 0, z: 0.64623964}
+--- !u!114 &371066300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371066285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277c196548835244496392d3b7a6a552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  conversation: {fileID: 371066293}
 --- !u!1 &391681736 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7599190570879232258, guid: 2ee7c4a3c08d9ae4ea14ecf15bf0aea3, type: 3}
@@ -1293,7 +1307,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502976054}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a31132083f73505479aaa29d843c94eb, type: 3}
   m_Name: 
@@ -1302,6 +1316,7 @@ MonoBehaviour:
   promptUI: {fileID: 679679702}
   allowInteraction: 1
   isRunning: 0
+  playerInRange: 0
 --- !u!114 &502976060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,8 +1329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5516db2538b91c540a189595de5fb6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KratosConversationStarter
-  boxConversation: {fileID: 502976057}
-  faceTurnSpeed: 5
+  conversation: {fileID: 502976057}
   npcAnimator: {fileID: 502976055}
   talkAnimationBool: IsTalking
 --- !u!65 &502976061
@@ -1711,8 +1725,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 166.3, y: 26.739}
-  m_SizeDelta: {x: 200, y: 53.4785}
+  m_AnchoredPosition: {x: 234.54085, y: 26.739}
+  m_SizeDelta: {x: 336.4816, y: 53.4785}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &679679704
 MonoBehaviour:
@@ -3181,38 +3195,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844ad603ec685594a93d6529c3d639a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
-  interactionDistance: 5
-  interactAction:
-    m_Name: Interact
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: af0f6dc1-4bb6-4246-afd3-b8a046031031
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 17ddacd9-cf18-4b4b-8569-896ad2cb92f1
-      m_Path: <Keyboard>/f
-      m_Interactions: Press
-      m_Processors: 
-      m_Groups: 
-      m_Action: Interact
-      m_Flags: 0
-    m_Flags: 0
---- !u!114 &1229717586
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229717581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2671b56b17e4bad45830c52120b53c31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 5
-  rotationSpeed: 10
+  interactionText: {fileID: 679679704}
+  rotationSpeed: 5
 --- !u!114 &1229717587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3280,6 +3264,20 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.9128187, z: 0}
+--- !u!114 &1229717599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229717581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2671b56b17e4bad45830c52120b53c31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  speed: 5
+  rotationSpeed: 10
 --- !u!1001 &1233795050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3970,8 +3968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5516db2538b91c540a189595de5fb6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KratosConversationStarter
-  boxConversation: {fileID: 1401495106}
-  faceTurnSpeed: 5
+  conversation: {fileID: 1401495106}
   npcAnimator: {fileID: 0}
   talkAnimationBool: IsTalking
 --- !u!114 &1401495105
@@ -3981,7 +3978,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401495102}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a31132083f73505479aaa29d843c94eb, type: 3}
   m_Name: 
@@ -3990,6 +3987,7 @@ MonoBehaviour:
   promptUI: {fileID: 679679702}
   allowInteraction: 1
   isRunning: 0
+  playerInRange: 0
 --- !u!114 &1401495106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4309,9 +4307,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1229717586}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1229717585}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
       insertIndex: -1
@@ -4325,6 +4320,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1229717595}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1229717599}
   m_SourcePrefab: {fileID: 100100000, guid: 308758609bf9d3e49a698f280b28b3c9, type: 3}
 --- !u!1 &1469347144
 GameObject:
@@ -5810,6 +5808,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ConversationManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: ScrollSpeed
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3900108755196472087, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5927,6 +5929,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+--- !u!1 &1873614526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1873614528}
+  - component: {fileID: 1873614527}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1873614527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873614526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4149cb37d723f3438e1044f0041ed10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputManager
+--- !u!4 &1873614528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873614526}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -212.5278, y: 0, z: -10.49618}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1894976929
 GameObject:
   m_ObjectHideFlags: 1
@@ -6162,6 +6208,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
       insertIndex: -1
       addedObject: {fileID: 371066299}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 371066300}
   m_SourcePrefab: {fileID: 100100000, guid: e568ea78b69d70f4fadbd60482b59a25, type: 3}
 --- !u!1 &2052418794 stripped
 GameObject:
@@ -6991,3 +7040,4 @@ SceneRoots:
   - {fileID: 1658521679}
   - {fileID: 1681523670}
   - {fileID: 1060123583}
+  - {fileID: 1873614528}

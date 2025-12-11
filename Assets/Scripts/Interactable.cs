@@ -2,33 +2,29 @@ using UnityEngine;
 using DialogueEditor;
 
 [RequireComponent(typeof(Collider))]
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour, IInteractable
 {
     [Header("Dialogue")]
     public NPCConversation conversation;
 
-    private PlayerInteract playerInside;
+    private PlayerInteract playerInteract;
 
     void OnTriggerEnter(Collider other)
     {
-        PlayerInteract player = other.GetComponent<PlayerInteract>();
-        if (player != null)
+        playerInteract = other.GetComponent<PlayerInteract>();
+        if (playerInteract != null)
         {
-            if (ConversationManager.Instance == null || !ConversationManager.Instance.IsConversationActive)
-            {
-                playerInside = player;
-                player.SetCurrentTarget(this);
-            }
+            playerInteract.SetCurrentTarget(this);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        PlayerInteract player = other.GetComponent<PlayerInteract>();
-        if (player != null && player == playerInside)
+        PlayerInteract leavingPlayer = other.GetComponent<PlayerInteract>();
+        if (leavingPlayer != null && leavingPlayer == playerInteract)
         {
-            player.ClearTarget(this);
-            playerInside = null;
+            playerInteract.ClearTarget(this);
+            playerInteract = null;
         }
     }
 
@@ -44,7 +40,12 @@ public class Interactable : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{gameObject.name} is missing a Conversation asset!");
+            Debug.LogWarning(gameObject.name + " is missing a Conversation asset!");
         }
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 }

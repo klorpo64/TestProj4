@@ -9052,6 +9052,10 @@ PrefabInstance:
       value: ConversationManager
       objectReference: {fileID: 0}
     - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: ScrollSpeed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: AllowMouseInteraction
       value: 0
       objectReference: {fileID: 0}
@@ -11956,7 +11960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.ProbeVolume
   mode: 1
-  size: {x: 1248.0168, y: 137.81564, z: 1021.01}
+  size: {x: 1248.017, y: 137.81564, z: 1021.01}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -11996,7 +12000,7 @@ Transform:
   m_GameObject: {fileID: 1098809121}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.530151, y: 65.53285, z: -3}
+  m_LocalPosition: {x: 13.530212, y: 65.53285, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12030,6 +12034,7 @@ GameObject:
   - component: {fileID: 1128204083}
   - component: {fileID: 1128204082}
   - component: {fileID: 1128204081}
+  - component: {fileID: 1128204086}
   m_Layer: 0
   m_Name: BeachTrigger
   m_TagString: Untagged
@@ -12148,6 +12153,19 @@ Transform:
   - {fileID: 1750532518}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1128204086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128204080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277c196548835244496392d3b7a6a552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  conversation: {fileID: 1219526174}
 --- !u!1 &1128550715
 GameObject:
   m_ObjectHideFlags: 0
