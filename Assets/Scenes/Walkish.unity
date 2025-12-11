@@ -17267,6 +17267,7 @@ GameObject:
   - component: {fileID: 1550551750}
   - component: {fileID: 1550551751}
   - component: {fileID: 1550551752}
+  - component: {fileID: 1550551753}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -17452,8 +17453,23 @@ MonoBehaviour:
   sensitivity: 150
   minY: -30
   maxY: 65
-  cutsceneMoveSpeed: 5
-  cutsceneRotateSpeed: 5
+--- !u!114 &1550551753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550551744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: fdb94060c3ee1044994b879e0a12f164, type: 2}
 --- !u!1001 &1552303715
 PrefabInstance:
   m_ObjectHideFlags: 0
