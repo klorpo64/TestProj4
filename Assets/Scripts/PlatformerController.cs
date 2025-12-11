@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlatformerController : MonoBehaviour
 {
+    // --- Existing Header Fields ---
+
     [Header("Movement")]
     public float moveSpeed = 9f;
     public float crouchSpeed = 3f;
@@ -55,10 +57,15 @@ public class PlatformerController : MonoBehaviour
     public float flashIntensity = 0.5f;
     public float flashSpeed = 8f;
 
-    [HideInInspector] public bool isGroundedBuffered; // Grounded buffer state
-    [HideInInspector] public Vector3 velocity; // Public for coconut collection checks
+    [HideInInspector] public bool isGroundedBuffered;
+    [HideInInspector] public Vector3 velocity;
+
+    // REMOVED: isFrozenForCutscene. Using GameManager.Instance.gameplayFrozen instead.
 
     private CharacterController controller;
+
+    // NOTE: This assumes your Player input action class is called PlayerControls, 
+    // which is used in your existing code. If you use InputSystem_Actions, change this:
     private PlayerControls controls;
 
     private Vector2 moveInput;
@@ -104,21 +111,43 @@ public class PlatformerController : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        controls = new PlayerControls();
+        controls = new PlayerControls(); // Assumes PlayerControls is the generated class name
 
         originalHeight = controller.height;
         originalCenter = controller.center;
 
-        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        // --- UPDATED INPUT SUBSCRIPTIONS ---
+        // Use lambda functions to check for the global freeze state before performing actions
+
+        controls.Player.Move.performed += ctx => moveInput = GetMoveInput(ctx);
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
-        controls.Player.Jump.performed += ctx => StartJump();
-        controls.Player.Crouch.performed += ctx => crouchHeld = true;
+        controls.Player.Jump.performed += ctx => { if (!IsGameFrozen()) StartJump(); };
+
+        // Crouch input only updates the boolean, logic in UpdateCrouchState handles timing
+        controls.Player.Crouch.performed += ctx => crouchHeld = !IsGameFrozen();
         controls.Player.Crouch.canceled += ctx => crouchHeld = false;
-        controls.Player.Dive.performed += ctx => StartDive();
+
+        controls.Player.Dive.performed += ctx => { if (!IsGameFrozen()) StartDive(); };
+
+        // Initialize materials
+        InitializeMaterials();
     }
 
-    void Start()
+    // Helper to filter move input when game is frozen
+    private Vector2 GetMoveInput(InputAction.CallbackContext ctx)
+    {
+        if (IsGameFrozen()) return Vector2.zero;
+        return ctx.ReadValue<Vector2>();
+    }
+
+    // Helper to check for global freeze state
+    private bool IsGameFrozen()
+    {
+        return GameManager.Instance != null && GameManager.Instance.gameplayFrozen;
+    }
+
+    void InitializeMaterials()
     {
         // Store all materials for emission effects
         if (playerRenderers != null && playerRenderers.Length > 0)
@@ -135,20 +164,33 @@ public class PlatformerController : MonoBehaviour
 
                 for (int m = 0; m < playerMaterials[r].Length; m++)
                 {
-                    if (playerMaterials[r][m].HasProperty("_EmissionColor"))
+                    if (playerMaterials[r][m] != null && playerMaterials[r][m].HasProperty("_EmissionColor"))
                         originalEmissionColors[r][m] = playerMaterials[r][m].GetColor("_EmissionColor");
                 }
             }
         }
     }
 
+    // Removed the redundant Start() method as material initialization is now in Awake
+
     void OnEnable() => controls.Enable();
     void OnDisable() => controls.Disable();
 
     void Update()
     {
-        // Freeze during cutscene
-        if (GameManager.Instance != null && GameManager.Instance.gameplayFrozen) return;
+        // Check global freeze state at the start of Update
+        if (IsGameFrozen())
+        {
+            // Stop all movement but continue applying gravity/stickiness if not stunned
+            horizVelocity = Vector3.zero;
+            if (controller.isGrounded && velocity.y < 0) velocity.y = gravityStickiness;
+
+            // Still move the character controller, but only vertically if not moving horizontally
+            controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
+
+            UpdateAnimator(); // Update animator to show standing/idle state
+            return;
+        }
 
         // Block movement if hit by car
         if (isHitByCar) return;
@@ -220,7 +262,8 @@ public class PlatformerController : MonoBehaviour
 
     void StartJump()
     {
-        if (isStunned || isDiving || (GameManager.Instance != null && GameManager.Instance.gameplayFrozen))
+        // CRITICAL CHECK: Input event handler needs to check freeze state again
+        if (isStunned || isDiving)
             return;
 
         if (isGroundedBuffered)
@@ -260,6 +303,7 @@ public class PlatformerController : MonoBehaviour
 
     void StartDive()
     {
+        // CRITICAL CHECK: Input event handler needs to check freeze state again
         if (isStunned || isGroundedBuffered || isDiving || hasDivedThisAir) return;
 
         hasDivedThisAir = true;
@@ -418,7 +462,7 @@ public class PlatformerController : MonoBehaviour
 
             for (int m = 0; m < playerMaterials[r].Length; m++)
             {
-                if (playerMaterials[r][m].HasProperty("_EmissionColor"))
+                if (playerMaterials[r][m] != null && playerMaterials[r][m].HasProperty("_EmissionColor"))
                     playerMaterials[r][m].SetColor("_EmissionColor", originalEmissionColors[r][m]);
             }
         }
@@ -426,8 +470,9 @@ public class PlatformerController : MonoBehaviour
 
     bool CanStand()
     {
+        float checkHeight = originalHeight * (1f - crouchHeightMultiplier) + controller.radius;
         Vector3 bottom = transform.position + controller.center - Vector3.up * (controller.height / 2 - controller.radius);
-        Vector3 top = bottom + Vector3.up * originalHeight;
+        Vector3 top = bottom + Vector3.up * checkHeight;
         return !Physics.CheckCapsule(bottom, top, controller.radius, ceilingLayers);
     }
 
@@ -449,7 +494,7 @@ public class PlatformerController : MonoBehaviour
 
         animator.SetFloat("VerticalVelocity", isGroundedBuffered ? 0f : velocity.y);
 
-        animator.SetBool("IsGrounded", isGroundedBuffered);
+        animator.SetBool("IsGrounded", controller.isGrounded); // Use raw isGrounded for animator, buffered for logic
         animator.SetBool("IsCrouching", isCrouching);
         animator.SetBool("IsCrawling", isCrawling);
         animator.SetBool("IsDiving", isDiving);
@@ -462,7 +507,6 @@ public class PlatformerController : MonoBehaviour
         }
     }
 
-    // Car hit logic
     public void HandleCarHit()
     {
         if (isHitByCar) return;
