@@ -1492,6 +1492,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &343067963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 343067964}
+  - component: {fileID: 343067965}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &343067964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343067963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.23712, y: 2.80885, z: -101.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &343067965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343067963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4149cb37d723f3438e1044f0041ed10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputManager
 --- !u!4 &375344648 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 441b94e92a74cf14bb90a7f9f81883a0, type: 3}
@@ -3325,6 +3369,7 @@ MonoBehaviour:
   promptUI: {fileID: 2088878281}
   allowInteraction: 1
   isRunning: 0
+  playerInRange: 0
 --- !u!65 &1136756101
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4602,6 +4647,7 @@ MonoBehaviour:
   promptUI: {fileID: 2088878281}
   allowInteraction: 1
   isRunning: 0
+  playerInRange: 0
 --- !u!65 &1698875134
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5226,24 +5272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844ad603ec685594a93d6529c3d639a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
-  interactionDistance: 5
-  interactAction:
-    m_Name: Interact
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: af0f6dc1-4bb6-4246-afd3-b8a046031031
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 17ddacd9-cf18-4b4b-8569-896ad2cb92f1
-      m_Path: <Keyboard>/f
-      m_Interactions: Press
-      m_Processors: 
-      m_Groups: 
-      m_Action: Interact
-      m_Flags: 0
-    m_Flags: 0
+  interactionText: {fileID: 0}
+  rotationSpeed: 5
 --- !u!114 &1974413745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5800,3 +5830,4 @@ SceneRoots:
   - {fileID: 113721311}
   - {fileID: 463248193}
   - {fileID: 1806528756}
+  - {fileID: 343067964}
