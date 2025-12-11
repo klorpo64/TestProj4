@@ -39,11 +39,11 @@ public class WaterScript : MonoBehaviour
         {
             directions[i] = new Vector2(UnityEngine.Random.Range(-1f, 1f),
                                         UnityEngine.Random.Range(-1f, 1f)).normalized;
-            wavelengths[i] = UnityEngine.Random.Range(1f, 20f) / (i + 1);
+            wavelengths[i] = UnityEngine.Random.Range(15f, 30f) / (i + 1);
 
             float k = 2f * 3.14f / wavelengths[i];
 
-            amplitudes[i] = UnityEngine.Random.Range(.05f, .9f) / k / (i + 1);
+            amplitudes[i] = UnityEngine.Random.Range(.05f, .5f) / k / (i + 1);
             float w = Mathf.Sqrt(9.81f * k);
             Debug.Log(w + " " + amplitudes[i]);
             magnitudes[i] = k;

@@ -4,8 +4,8 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     Transform pivot;
-    [SerializeField]
-    float speed;
+    [SerializeField, Range(0f, 50f)]
+    float speed = 10;
     [SerializeField, Range(0f, 360f)]
     float initialRotation;
 
@@ -17,6 +17,6 @@ public class Rotate : MonoBehaviour
 
     void Update()
     {
-        pivot.rotation = Quaternion.Euler(speed * Time.deltaTime * Vector3.up + pivot.rotation.eulerAngles);
+        pivot.rotation = Quaternion.Euler(speed * 10 * Time.deltaTime * Vector3.up + pivot.rotation.eulerAngles);
     }
 }
