@@ -12,7 +12,7 @@ public class NPCDialogueHandler : MonoBehaviour
     [HideInInspector] public bool allowInteraction = true;
     [HideInInspector] public bool isRunning = false;
 
-    private bool playerInRange = false;
+    public bool playerInRange = false;
     private bool dialogueActive = false;
 
     private void Start()

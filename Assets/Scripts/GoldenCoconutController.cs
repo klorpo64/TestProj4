@@ -1,137 +1,193 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Collider))]
 public class GoldenCoconutController : MonoBehaviour
 {
-    [Header("Spawn Settings")]
-    public float growDuration = 0.5f;           // time to grow from zero to target
-    public float initialSpinSpeed = 720f;       // fast spin during spawn
-    public float idleSpinSpeed = 60f;           // slow spin while hovering
-    public float bounceHeight = 0.2f;
+    // Define the regular (final) scale, matching GameManager's REGULAR_SCALE
+    private const float REGULAR_SCALE_VALUE = 0.01f;
+
+    [Header("ID & State")]
+    private string coconutID;
+    public bool isCollected = false;
+    public Material collectedMaterial;
+    public Material uncollectedMaterial;
+
+    [Header("Spawn Animation")]
+    public float spawnDuration = 1.5f;
+    public Vector3 targetScale = new Vector3(REGULAR_SCALE_VALUE, REGULAR_SCALE_VALUE, REGULAR_SCALE_VALUE);
+    public float initialScale = 0.0000000000001f;
+    public float spawnBounceHeight = 1f;
+    public float spawnSpinSpeed = 720f;
+
+    private bool isFullyGrown = false;
+
+    [Header("Idle Animation")]
     public float hoverAmplitude = 0.05f;
     public float hoverSpeed = 1f;
+    public float rotationSpeed = 60f;
 
-    [Header("Player Freeze & Dance")]
-    public float danceDuration = 5f;
-    public Transform playerTransform;
-    public PlatformerController playerController;
-    public Transform cameraTransform;
+    [Header("Audio")]
+    public AudioClip collectSound;
+    private AudioSource audioSource;
 
-    [Header("Scale")]
-    private Vector3 spawnScale = Vector3.zero;
-    private Vector3 targetScale = new Vector3(0.01f, 0.01f, 0.01f);
+    private Renderer coconutRenderer;
+    private Collider coconutCollider;
     private Vector3 originalPosition;
+    private Coroutine idleCoroutine;
 
-    private bool collected = false;
-
-    private void Start()
+    void Awake()
     {
-        // If coconut already collected, destroy self immediately
-        if (GameManager.Instance != null && GameManager.Instance.coconutCollected)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        coconutRenderer = GetComponent<Renderer>() ?? GetComponentInChildren<Renderer>();
+        coconutCollider = GetComponent<Collider>();
 
-        originalPosition = transform.position;
-        transform.localScale = spawnScale;
-        StartCoroutine(SpawnAnimation());
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    private IEnumerator SpawnAnimation()
+    void Start()
     {
-        float t = 0f;
-        Vector3 startPos = originalPosition;
-        Vector3 endPos = originalPosition + Vector3.up * bounceHeight;
+        originalPosition = transform.position;
+    }
 
-        while (t < growDuration)
+    // -----------------------------
+    // Public Methods
+    // -----------------------------
+    public void Initialize(string id, bool collectedStatus, bool isCollectedPrefab)
+    {
+        coconutID = id;
+        isCollected = collectedStatus;
+        originalPosition = transform.position;
+
+        SetVisuals(!isCollectedPrefab);
+
+        float scaleTolerance = 0.0001f;
+
+        if (!isCollectedPrefab)
         {
-            t += Time.deltaTime;
-            float p = t / growDuration;
+            if (transform.localScale.x > targetScale.x - scaleTolerance)
+            {
+                isFullyGrown = true;
+            }
+            else
+            {
+                isFullyGrown = false;
+            }
+        }
+        else
+        {
+            isFullyGrown = true;
+            SetVisuals(true);
+        }
 
-            // Scale
-            transform.localScale = Vector3.Lerp(spawnScale, targetScale, p);
+        if (coconutCollider != null)
+        {
+            coconutCollider.enabled = !isCollected && isFullyGrown;
+        }
+    }
 
-            // Bounce
-            transform.position = Vector3.Lerp(startPos, endPos, Mathf.Sin(p * Mathf.PI));
+    public void StartSpawnAnimation()
+    {
+        if (idleCoroutine != null) StopCoroutine(idleCoroutine);
+        SetVisuals(true);
+        isFullyGrown = false;
 
-            // Fast spin
-            transform.Rotate(Vector3.up, initialSpinSpeed * Time.deltaTime);
+        StartCoroutine(SpawnAnimationRoutine());
+    }
+
+    public void StartIdleHover()
+    {
+        if (idleCoroutine == null)
+            idleCoroutine = StartCoroutine(IdleHoverRoutine());
+    }
+
+    // -----------------------------
+    // Private Methods
+    // -----------------------------
+    private void SetVisuals(bool visible)
+    {
+        if (coconutRenderer != null)
+            coconutRenderer.enabled = visible;
+
+        if (visible && uncollectedMaterial != null)
+            coconutRenderer.material = uncollectedMaterial;
+
+        if (!visible && collectedMaterial != null)
+            coconutRenderer.material = collectedMaterial;
+    }
+
+    private IEnumerator SpawnAnimationRoutine()
+    {
+        float timer = 0f;
+        Vector3 startScale = transform.localScale;
+
+        if (coconutCollider != null) coconutCollider.enabled = false;
+
+        while (timer < spawnDuration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / spawnDuration;
+
+            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
+            transform.Rotate(Vector3.up, spawnSpinSpeed * Time.deltaTime, Space.World);
+
+            float yOffset = spawnBounceHeight * Mathf.Sin(t * Mathf.PI);
+            transform.position = originalPosition + Vector3.up * yOffset;
 
             yield return null;
         }
 
         transform.localScale = targetScale;
         transform.position = originalPosition;
+        isFullyGrown = true;
 
-        // Start idle spin + hover
-        StartCoroutine(IdleAnimation());
+        if (coconutCollider != null) coconutCollider.enabled = true;
+
+        StartIdleHover();
     }
 
-    private IEnumerator IdleAnimation()
+    private IEnumerator IdleHoverRoutine()
     {
-        while (!collected)
+        float timeOffset = Random.Range(0f, 10f);
+
+        while (true)
         {
-            float yOffset = Mathf.Sin(Time.time * hoverSpeed) * hoverAmplitude;
-            transform.position = originalPosition + new Vector3(0, yOffset, 0);
-            transform.Rotate(Vector3.up, idleSpinSpeed * Time.deltaTime);
+            float yOffset = Mathf.Sin(Time.time * hoverSpeed + timeOffset) * hoverAmplitude;
+            transform.position = originalPosition + Vector3.up * yOffset;
+
+            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
+
             yield return null;
         }
     }
 
+    // -----------------------------
+    // Collection
+    // -----------------------------
     private void OnTriggerEnter(Collider other)
     {
-        if (collected) return;
+        if (!isFullyGrown || (GameManager.Instance != null && GameManager.Instance.gameplayFrozen)) return;
 
-        if (other.CompareTag("Player"))
-        {
-            collected = true;
-            StartCoroutine(CollectCoconut());
-        }
+        if (other.CompareTag("Player")) CollectCoconutImmediate();
     }
 
-    private IEnumerator CollectCoconut()
+    private void CollectCoconutImmediate()
     {
-        // Freeze player and camera
-        if (playerController != null) playerController.enabled = false;
-        if (GameManager.Instance != null) GameManager.Instance.gameplayFrozen = true;
+        StopAllCoroutines();
 
-        // Wait until player vertical velocity hits 0 twice
-        int zeroHits = 0;
-        Vector3 lastVelocity = Vector3.zero;
-        while (zeroHits < 2)
+        bool alreadyCollectedInManager = GameManager.Instance.IsCoconutCollected(coconutID);
+
+        if (!alreadyCollectedInManager)
         {
-            float verticalVel = playerController != null ? playerController.velocity.y : 0f;
-            if (Mathf.Abs(verticalVel) < 0.01f && Mathf.Abs(lastVelocity.y) > 0.01f)
-                zeroHits++;
-            lastVelocity = playerController != null ? playerController.velocity : Vector3.zero;
-            yield return null;
+            GameManager.Instance.CollectCoconut(coconutID);
+            isCollected = true;
         }
 
-        // Make player face camera
-        if (playerTransform != null && cameraTransform != null)
-        {
-            Vector3 lookDir = cameraTransform.position - playerTransform.position;
-            lookDir.y = 0;
-            playerTransform.rotation = Quaternion.LookRotation(-lookDir);
-        }
+        if (collectSound != null && audioSource != null)
+            audioSource.PlayOneShot(collectSound);
 
-        // Play dance
-        if (playerController != null && playerController.animator != null)
-            playerController.animator.SetTrigger("Dance");
+        SetVisuals(false);
 
-        // Wait dance duration
-        yield return new WaitForSeconds(danceDuration);
-
-        // Re-enable player control
-        if (playerController != null) playerController.enabled = true;
-        if (GameManager.Instance != null) GameManager.Instance.gameplayFrozen = false;
-
-        // Update coconut count and mark as collected
-        if (GameManager.Instance != null)
-            GameManager.Instance.IncrementGoldenCoconutCount();
-
-        // Destroy coconut object
-        Destroy(gameObject);
+        Destroy(gameObject, 0.1f);
     }
 }

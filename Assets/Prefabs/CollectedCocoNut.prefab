@@ -62,12 +62,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 027d545e42950e74fa771917701d53e0, type: 3}
       propertyPath: m_Name
-      value: CocoNut
+      value: CollectedCocoNut
       objectReference: {fileID: 0}
     - target: {fileID: 6656639966947803347, guid: 027d545e42950e74fa771917701d53e0, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: fff75a82842f0b3438e2f24b9f1fc18a, type: 2}
+      objectReference: {fileID: 2100000, guid: d77b64e8ed7745c449868eb2a2060a4c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

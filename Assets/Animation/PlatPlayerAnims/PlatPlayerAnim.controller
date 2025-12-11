@@ -834,7 +834,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: VerticalVelocity
-    m_EventTreshold: -30
+    m_EventTreshold: -45
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1414558065038428364}
   m_Solo: 0
@@ -1345,7 +1345,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: VerticalVelocity
-    m_EventTreshold: -30
+    m_EventTreshold: -45
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1414558065038428364}
   m_Solo: 0

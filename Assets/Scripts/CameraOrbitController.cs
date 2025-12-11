@@ -12,6 +12,12 @@ public class CameraOrbitController : MonoBehaviour
     public float minY = -30f;
     public float maxY = 65f;
 
+    [Header("Cutscene Smoothing")]
+    // NOTE: These fields are currently unused as GameManager directly controls the camera, 
+    // but they remain for configuration flexibility.
+    public float cutsceneMoveSpeed = 5f;
+    public float cutsceneRotateSpeed = 5f;
+
     private PlayerControls controls;
     private Vector2 lookInput;
 
@@ -54,11 +60,10 @@ public class CameraOrbitController : MonoBehaviour
     {
         if (!target) return;
 
-        // If locked, use the override position/rotation
+        // --- CRITICAL FIX: If the camera is locked by the GameManager, 
+        // return immediately to prevent this script from overriding the cutscene's camera movements.
         if (isLocked)
         {
-            transform.position = cutsceneTargetPosition;
-            transform.rotation = cutsceneTargetRotation;
             return;
         }
 
@@ -88,42 +93,29 @@ public class CameraOrbitController : MonoBehaviour
         isLocked = shouldLock;
         if (!shouldLock)
         {
-            // Reset orbit angles when unlocking
+            // Reset orbit angles when unlocking, using the camera's current rotation
             rotX = transform.rotation.eulerAngles.y;
             rotY = transform.rotation.eulerAngles.x;
-            if (rotY > 180) rotY -= 360;
+            if (rotY > 180) rotY -= 360; // Handle positive/negative angle conversion for clamped rotY
 
             UpdateCameraPosition();
         }
     }
 
-    // Gets the camera's current world position
+    public void OverridePosition(Vector3 position) { /* cutsceneTargetPosition = position; */ }
+    public void OverrideRotation(Quaternion rotation) { /* cutsceneTargetRotation = rotation; */ }
+
+    // Helper methods
     public Vector3 GetCurrentCameraPosition()
     {
         return transform.position;
     }
-
-    // Gets the camera's current world rotation angles
     public Vector3 GetCurrentCameraRotation()
     {
         return transform.rotation.eulerAngles;
     }
-
-    // Gets the camera's current stored orbit angles
     public Vector3 GetInitialRotation()
     {
         return new Vector3(rotY, rotX, 0f);
-    }
-
-    // Sets the position for the locked state
-    public void OverridePosition(Vector3 position)
-    {
-        cutsceneTargetPosition = position;
-    }
-
-    // Sets the rotation for the locked state
-    public void OverrideRotation(Quaternion rotation)
-    {
-        cutsceneTargetRotation = rotation;
     }
 }

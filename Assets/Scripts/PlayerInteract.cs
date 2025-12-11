@@ -1,82 +1,166 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using TMPro;
+using DialogueEditor;
+using System.Collections;
 
+[RequireComponent(typeof(PlatformerController))]
 public class PlayerInteract : MonoBehaviour
 {
-    [Header("Interaction Settings")]
-    public float interactionDistance = 3f;
-    public InputAction interactAction;
+    [Header("UI")]
+    public TextMeshProUGUI interactionText;
+
+    [Header("Rotation Settings")]
+    public float rotationSpeed = 5f; // affects smooth rotation
 
     private Interactable currentTarget;
-    private Interactable lastTarget;
+    private PlatformerController playerMovement;
+    private Animator anim;
 
-    private void Update()
+    private bool isInteracting = false;
+
+    void Start()
     {
-        CheckForInteractable();
+        playerMovement = GetComponent<PlatformerController>();
+        anim = GetComponent<Animator>();
+
+        if (interactionText != null)
+            interactionText.gameObject.SetActive(false);
+        else
+            Debug.LogError("InteractionText is not assigned in the Inspector!");
+
+        ConversationManager.OnConversationEnded += OnConversationEnded;
     }
 
-    private void CheckForInteractable()
+    void OnDestroy()
     {
-        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
-        Ray ray = new Ray(rayOrigin, transform.forward);
+        ConversationManager.OnConversationEnded -= OnConversationEnded;
+    }
 
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
+    void Update()
+    {
+        // Hide prompt if no target or conversation active
+        if ((currentTarget == null || (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive))
+            && interactionText != null && interactionText.gameObject.activeSelf)
         {
-            Interactable interactable = hit.collider.GetComponent<Interactable>();
+            HidePrompt();
+        }
 
-            if (interactable != null)
+        // Input check (Old Input System)
+        if (!isInteracting && currentTarget != null)
+        {
+            // Keyboard F
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                currentTarget = interactable;
+                Debug.Log("F pressed - attempting to start dialogue");
+                StartConversation();
+            }
 
-                if (lastTarget != currentTarget)
-                {
-                    lastTarget?.HidePrompt();
-                    currentTarget.ShowPrompt();
-                    lastTarget = currentTarget;
-                }
-
-                Debug.DrawRay(rayOrigin, transform.forward * interactionDistance, Color.green);
-                return;
+            // Controller A / East
+            if (Input.GetKeyDown(KeyCode.JoystickButton1))
+            {
+                Debug.Log("Controller A (East) pressed - attempting to start dialogue");
+                StartConversation();
             }
         }
+    }
 
-        // No interactable in sight
-        if (lastTarget != null)
+    // --- Conversation ---
+    public void OnConversationStarted()
+    {
+        isInteracting = true;
+        HidePrompt();
+
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
+        if (anim != null)
+            anim.SetTrigger("Idle");
+    }
+
+    private void OnConversationEnded()
+    {
+        isInteracting = false;
+
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+
+        if (currentTarget != null)
+            ShowPrompt();
+    }
+
+    // --- NPC Communication ---
+    public void SetCurrentTarget(Interactable newTarget)
+    {
+        currentTarget = newTarget;
+
+        if (!isInteracting && (ConversationManager.Instance == null || !ConversationManager.Instance.IsConversationActive))
+            ShowPrompt();
+    }
+
+    public void ClearTarget(Interactable leavingTarget)
+    {
+        if (currentTarget == leavingTarget)
         {
-            lastTarget.HidePrompt();
-            lastTarget = null;
+            currentTarget = null;
+            HidePrompt();
         }
-
-        currentTarget = null;
     }
 
-    private void OnEnable()
+    // --- UI ---
+    public void ShowPrompt()
     {
-        interactAction.Enable();
-        interactAction.performed += OnInteractPerformed;
+        if (interactionText == null || isInteracting || currentTarget == null) return;
+        interactionText.gameObject.SetActive(true);
     }
 
-    private void OnDisable()
+    public void HidePrompt()
     {
-        interactAction.performed -= OnInteractPerformed;
-        interactAction.Disable();
+        if (interactionText != null)
+            interactionText.gameObject.SetActive(false);
     }
 
-    private void OnInteractPerformed(InputAction.CallbackContext context)
+    // --- Start Dialogue with smooth rotation ---
+    private void StartConversation()
     {
         if (currentTarget != null)
         {
-            InteractWithObject();
+            StartCoroutine(FaceEachOtherCoroutine(currentTarget));
         }
     }
 
-    private void InteractWithObject()
+    private IEnumerator FaceEachOtherCoroutine(Interactable target)
     {
-        Vector3 direction = currentTarget.transform.position - transform.position;
-        direction.y = 0;
-        if (direction != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(direction);
+        float duration = 0.3f; // rotation duration in seconds
+        float elapsed = 0f;
 
-        DialogueSystem.instance.ShowDialogue(currentTarget.dialogueText);
+        // Initial rotations
+        Quaternion startPlayerRot = transform.rotation;
+        Vector3 playerDir = target.transform.position - transform.position;
+        playerDir.y = 0;
+        Quaternion targetPlayerRot = Quaternion.LookRotation(playerDir);
+
+        Quaternion startNpcRot = target.transform.rotation;
+        Vector3 npcDir = transform.position - target.transform.position;
+        npcDir.y = 0;
+        Quaternion targetNpcRot = Quaternion.LookRotation(npcDir);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            transform.rotation = Quaternion.Slerp(startPlayerRot, targetPlayerRot, t);
+            target.transform.rotation = Quaternion.Slerp(startNpcRot, targetNpcRot, t);
+
+            yield return null;
+        }
+
+        // Ensure exact final rotation
+        transform.rotation = targetPlayerRot;
+        target.transform.rotation = targetNpcRot;
+
+        // Start dialogue after rotation
+        OnConversationStarted();
+        target.Interact(this);
     }
 }

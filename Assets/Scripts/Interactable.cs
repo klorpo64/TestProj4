@@ -1,28 +1,50 @@
 using UnityEngine;
+using DialogueEditor;
 
+[RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour
 {
-    [TextArea]
-    public string dialogueText;
+    [Header("Dialogue")]
+    public NPCConversation conversation;
 
-    [Header("Prompt Settings")]
-    public GameObject promptPrefab; // assign the "Press F" prefab
-    private GameObject promptInstance;
+    private PlayerInteract playerInside;
 
-    public void ShowPrompt()
+    void OnTriggerEnter(Collider other)
     {
-        if (promptPrefab != null && promptInstance == null)
+        PlayerInteract player = other.GetComponent<PlayerInteract>();
+        if (player != null)
         {
-            promptInstance = Instantiate(promptPrefab, transform);
-            promptInstance.transform.localPosition = Vector3.up * 2f; // adjust height
+            if (ConversationManager.Instance == null || !ConversationManager.Instance.IsConversationActive)
+            {
+                playerInside = player;
+                player.SetCurrentTarget(this);
+            }
         }
     }
 
-    public void HidePrompt()
+    void OnTriggerExit(Collider other)
     {
-        if (promptInstance != null)
+        PlayerInteract player = other.GetComponent<PlayerInteract>();
+        if (player != null && player == playerInside)
         {
-            Destroy(promptInstance);
+            player.ClearTarget(this);
+            playerInside = null;
+        }
+    }
+
+    public void Interact(PlayerInteract player)
+    {
+        if (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)
+            return;
+
+        if (conversation != null)
+        {
+            player.OnConversationStarted();
+            ConversationManager.Instance.StartConversation(conversation);
+        }
+        else
+        {
+            Debug.LogWarning($"{gameObject.name} is missing a Conversation asset!");
         }
     }
 }
