@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class CarSpawner : MonoBehaviour
 {
-    public GameObject[] carPrefabs;     // Array of different colored car prefabs
-    public Transform[] spawnPoints;     // Possible spawn positions
-    public float spawnInterval = 3f;    // Time between spawns
-    public int maxCars = 10;            // Max cars on screen
+    public GameObject[] carPrefabs;
+    public GameObject carJumpZonePrefab;
+    public Transform[] spawnPoints;
+
+    public float spawnInterval = 3f;
+    public int maxCars = 10;
+    public float carLifetime = 10f;
 
     private int currentCars = 0;
 
@@ -18,19 +21,23 @@ public class CarSpawner : MonoBehaviour
     {
         if (currentCars >= maxCars) return;
 
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-
-        // Pick a random prefab
+        Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
         GameObject carPrefab = carPrefabs[Random.Range(0, carPrefabs.Length)];
 
-        GameObject car = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
-        currentCars++;
+        GameObject car = Instantiate(carPrefab, point.position, point.rotation);
 
-        Destroy(car, 10f);
-        Invoke(nameof(DecreaseCarCount), 10f);
+        if (carJumpZonePrefab != null)
+        {
+            GameObject zone = Instantiate(carJumpZonePrefab, car.transform.position, Quaternion.identity);
+            zone.transform.SetParent(car.transform);
+        }
+
+        currentCars++;
+        Destroy(car, carLifetime);
+        Invoke(nameof(DecreaseCar), carLifetime);
     }
 
-    void DecreaseCarCount()
+    void DecreaseCar()
     {
         currentCars--;
     }

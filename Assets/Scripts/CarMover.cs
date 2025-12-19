@@ -6,6 +6,9 @@ public class CarMover : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance != null && GameManager.Instance.gameplayFrozen)
+            return;
+
         transform.position += Vector3.left * speed * Time.deltaTime;
     }
 }

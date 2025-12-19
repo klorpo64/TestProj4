@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI; // For the fade image
 
 public class BoatCutscene : MonoBehaviour
 {
@@ -19,14 +21,21 @@ public class BoatCutscene : MonoBehaviour
     [Header("Bob & Tilt")]
     public float bobHeight = 0.1f;
     public float bobSpeed = 1.5f;
-    public float tiltAmount = 2f;   // X-axis rotation
-    public float swayAmount = 1f;   // Z-axis rotation
+    public float tiltAmount = 2f;
+    public float swayAmount = 1f;
     public float swaySpeed = 1f;
 
     [Header("Yaw Settings")]
-    public float baseYaw = 90f;     // Base direction the boat faces
-    public float yawAmount = 5f;    // Oscillation around base yaw
+    public float baseYaw = 90f;
+    public float yawAmount = 5f;
     public float yawSpeed = 1f;
+
+    [Header("Scene Settings")]
+    public string islandSceneName = "Islands";
+
+    [Header("Fade Settings")]
+    public Image fadeImage;           // Assign a fullscreen black UI Image
+    public float fadeDuration = 1f;   // Duration of fade-to-black
 
     private Vector3 targetPathPos;
     private float bobTimer;
@@ -34,6 +43,14 @@ public class BoatCutscene : MonoBehaviour
     void Start()
     {
         targetPathPos = startPoint.position;
+
+        // Make sure fadeImage is fully transparent at start
+        if (fadeImage != null)
+        {
+            fadeImage.gameObject.SetActive(true);
+            fadeImage.color = new Color(0, 0, 0, 0);
+        }
+
         StartCoroutine(BoatSequence());
     }
 
@@ -41,22 +58,17 @@ public class BoatCutscene : MonoBehaviour
     {
         bobTimer += Time.deltaTime;
 
-        // Bobbing
         float y = Mathf.Sin(bobTimer * bobSpeed) * bobHeight;
-
-        // Rotations
         float tilt = Mathf.Sin(bobTimer * bobSpeed) * tiltAmount;
         float sway = Mathf.Sin(bobTimer * swaySpeed) * swayAmount;
         float yaw = baseYaw + Mathf.Sin(bobTimer * yawSpeed) * yawAmount;
 
-        // Apply position
         transform.position = new Vector3(
             targetPathPos.x,
             targetPathPos.y + y,
             targetPathPos.z
         );
 
-        // Apply rotation
         transform.rotation = Quaternion.Euler(tilt, yaw, sway);
     }
 
@@ -65,6 +77,15 @@ public class BoatCutscene : MonoBehaviour
         yield return MoveSmooth(startPoint.position, middlePoint.position, toMiddleDuration);
         yield return new WaitForSeconds(pauseTime);
         yield return MoveSmooth(middlePoint.position, endPoint.position, toEndDuration);
+
+        // Wait 1 second at the end
+        yield return new WaitForSeconds(1f);
+
+        // Start fade and scene switch
+        if (fadeImage != null)
+            yield return StartCoroutine(FadeToBlack());
+
+        SceneManager.LoadScene(islandSceneName);
     }
 
     IEnumerator MoveSmooth(Vector3 from, Vector3 to, float duration)
@@ -103,5 +124,21 @@ public class BoatCutscene : MonoBehaviour
         }
 
         targetPathPos = finalPos;
+    }
+
+    IEnumerator FadeToBlack()
+    {
+        float elapsed = 0f;
+        Color startColor = fadeImage.color;
+        Color targetColor = new Color(0, 0, 0, 1);
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            fadeImage.color = Color.Lerp(startColor, targetColor, elapsed / fadeDuration);
+            yield return null;
+        }
+
+        fadeImage.color = targetColor;
     }
 }

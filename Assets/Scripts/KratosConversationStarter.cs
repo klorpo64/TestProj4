@@ -1,107 +1,59 @@
 using UnityEngine;
 using DialogueEditor;
 
-public class KratosConversationStarter : MonoBehaviour
+[RequireComponent(typeof(Collider))]
+public class KratosConversationStarter : MonoBehaviour, IInteractable
 {
-    [SerializeField] private NPCConversation boxConversation;
-    [SerializeField] private float faceTurnSpeed = 5f;
-    [SerializeField] private Animator npcAnimator;
-    [SerializeField] private string talkAnimationBool = "IsTalking";
+    [Header("Dialogue")]
+    public NPCConversation conversation;
 
-    private bool canTalk = false;
-    private Transform player;
-    private Animator playerAnimator;
-    private bool isPlayerFacing = false;
+    [Header("NPC Animation")]
+    public Animator npcAnimator;
+    public string talkAnimationBool = "IsTalking";
 
-    void Start()
-    {
-        // Subscribe to Dialogue Editor events
-        ConversationManager.OnConversationStarted += HandleConversationStart;
-        ConversationManager.OnConversationEnded += HandleConversationEnd;
-    }
-
-    void OnDestroy()
-    {
-        // Unsubscribe to avoid memory leaks
-        ConversationManager.OnConversationStarted -= HandleConversationStart;
-        ConversationManager.OnConversationEnded -= HandleConversationEnd;
-    }
+    private PlayerInteract playerInteract;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        playerInteract = other.GetComponentInParent<PlayerInteract>();
+        if (playerInteract != null)
         {
-            player = other.transform;
-            playerAnimator = player.GetComponent<Animator>();
-            canTalk = true;
+            playerInteract.SetCurrentTarget(this);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        PlayerInteract leavingPlayer = other.GetComponentInParent<PlayerInteract>();
+        if (leavingPlayer != null)
         {
-            canTalk = false;
-            player = null;
-            playerAnimator = null;
+            leavingPlayer.ClearTarget(this);
+            playerInteract = null;
         }
     }
 
-    void Update()
+    public void Interact(PlayerInteract player)
     {
-        if (canTalk && Input.GetKeyDown(KeyCode.F))
+        if (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)
+            return;
+
+        if (conversation != null)
         {
-            if (!ConversationManager.Instance.IsConversationActive)
-            {
-                ConversationManager.Instance.StartConversation(boxConversation);
-            }
-        }
-
-        // Smoothly rotate player to face the NPC during dialogue
-        if (isPlayerFacing && player != null)
-        {
-            Vector3 direction = (transform.position - player.position).normalized;
-            direction.y = 0f;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            player.rotation = Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * faceTurnSpeed);
-        }
-    }
-
-    private void HandleConversationStart()
-    {
-        if (player != null)
-        {
-            // Disable movement
-            var controller = player.GetComponent<PlayerMovement>();
-            if (controller != null) controller.enabled = false;
-
-            // Force idle animation
-            if (playerAnimator != null)
-            {
-                playerAnimator.SetFloat("Speed", 0f);  // If you use a blend tree
-            }
-
-            // Start facing the NPC
-            isPlayerFacing = true;
-
-            if(npcAnimator!=null)
-                npcAnimator.SetBool(talkAnimationBool, true);
-        }
-    }
-
-    private void HandleConversationEnd()
-    {
-        if (player != null)
-        {
-            // Re-enable movement
-            var controller = player.GetComponent<PlayerMovement>();
-            if (controller != null) controller.enabled = true;
-
-            // Stop facing NPC
-            isPlayerFacing = false;
+            player.OnConversationStarted();
 
             if (npcAnimator != null)
-                npcAnimator.SetBool(talkAnimationBool, false);
+                npcAnimator.SetBool(talkAnimationBool, true);
+
+            ConversationManager.Instance.StartConversation(conversation);
         }
+        else
+        {
+            Debug.LogWarning(gameObject.name + " is missing a Conversation asset!");
+        }
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 }

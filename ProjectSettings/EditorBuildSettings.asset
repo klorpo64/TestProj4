@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TravelCutscene.unity
     guid: 5145c1b8c16cb4048a121c23a127302e
+  - enabled: 1
+    path: Assets/Scenes/IslandScene.unity
+    guid: 3a99d2e0edce08949b90fcea81fe1e9b
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e0731d4205b968146a1800e7c5005434, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
